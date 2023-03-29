@@ -1,0 +1,74 @@
+version: "3.4"
+
+services:
+  mariadb:
+    image: mariadb:latest
+    networks:
+      - network_cluster       
+    restart: always
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.mariadb.rule=HostSNI(`*`)"
+        - "traefik.http.routers.mariadb.entrypoints=mariadb"
+        - "traefik.http.routers.mariadb.service=mariadb"
+        - "traefik.http.routers.mariadb.middlewares=noauth-chain@file"
+        - "traefik.http.services.mariadb.loadbalancer.server.port=3306"       
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == nas 
+          - node.labels.nas == primary
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    networks:
+      - network_cluster       
+    restart: on-failure
+    volumes:
+      - homenas_phpmyadmin:/var/www/html/themes/mytheme  
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.phpmyadmin.rule=Host(`mysqladmin.cloudvalley.name`)"
+        - "traefik.http.routers.phpmyadmin.entrypoints=websecure"
+        - "traefik.http.routers.phpmyadmin.service=phpmyadmin"
+        - "traefik.http.routers.phpmyadmin.middlewares=noauth-chain@file"
+        - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"       
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == nas 
+          - node.labels.nas == primary
+
+networks:
+  network_cluster:
+    external: true
+     
+x-common-keys-volume: &common-keys-volume
+  type: nfs
+  o: addr=192.168.11.99,rw,nfsvers=4
+  
+volumes:
+  homenas_mariadb_data: 
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :/volume1/docker/swarm/database/mysql/mariadb10/data
+  homenas_mariadb_conf: 
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :/volume1/docker/swarm/database/mysql/mariadb10/conf
+  homenas_mariadb_log: 
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :/volume1/docker/swarm/database/mysql/mariadb10/log
+  homenas_phpmyadmin: 
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :/volume1/docker/swarm/database/phpmyadmin/theme
