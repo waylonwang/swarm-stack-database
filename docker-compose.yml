@@ -9,7 +9,7 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.mariadb.rule=HostSNI(`*`)"
+        - "traefik.http.routers.mariadb.rule=HostSNI(`mysql.cloudvalley.name`)"
         - "traefik.http.routers.mariadb.entrypoints=mariadb"
         - "traefik.http.routers.mariadb.service=mariadb"
         - "traefik.http.routers.mariadb.middlewares=noauth-chain@file"
