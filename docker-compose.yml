@@ -6,8 +6,10 @@ services:
     networks:
       - network_cluster       
     restart: always
-    environment:
-      MARIADB_ROOT_PASSWORD: 123
+    #environment:
+      #MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+    env_file:     
+      - ../../stack.env      
     deploy:
       labels:
         - "traefik.enable=true"
