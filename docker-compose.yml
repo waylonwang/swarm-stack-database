@@ -7,10 +7,12 @@ services:
     networks:
       - network_cluster       
     restart: always
-    #environment:
-      #MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
     env_file:     
-      - ../../stack.env      
+      - ../../stack.env
+    volumes:
+      - homenas_mariadb_data:/var/lib/mysql
+      - homenas_mariadb_conf:/etc/mysql/conf.d
+      - homenas_mariadb_log:/var/log/mysql
     deploy:
       labels:
         - "traefik.enable=true"
