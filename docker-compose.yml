@@ -11,13 +11,13 @@ services:
       # 直接使用Portainer容器内的环境变量
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
     volumes:
-      - homenas_mariadb_data:/var/lib/mysql
-      - homenas_mariadb_conf:/etc/mysql/conf.d
-      - homenas_mariadb_log:/var/log/mysql
+      - nfs_mariadb_data:/var/lib/mysql
+      - nfs_mariadb_conf:/etc/mysql/conf.d
+      - nfs_mariadb_log:/var/log/mysql
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.mariadb.rule=HostSNI(`mysql.cloudvalley.name`)"
+        - "traefik.http.routers.mariadb.rule=HostSNI(`mysql.${DOMAIN_SWARM}`)"
         - "traefik.http.routers.mariadb.entrypoints=mariadb"
         - "traefik.http.routers.mariadb.service=mariadb"
         - "traefik.http.routers.mariadb.middlewares=noauth-chain@file"
@@ -44,11 +44,11 @@ services:
       PMA_USER: ${PMA_USER}
       PMA_PASSWORD: ${PMA_PASSWORD}
     volumes:
-      - homenas_phpmyadmin:/var/www/html/themes/mytheme  
+      - nfs_phpmyadmin:/var/www/html/themes/mytheme  
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.phpmyadmin.rule=Host(`mysqladmin.cloudvalley.name`)"
+        - "traefik.http.routers.phpmyadmin.rule=Host(`mysqladmin.${DOMAIN_SWARM}`)"
         - "traefik.http.routers.phpmyadmin.entrypoints=websecure"
         - "traefik.http.routers.phpmyadmin.service=phpmyadmin"
         - "traefik.http.routers.phpmyadmin.middlewares=noauth-chain@file"
@@ -66,27 +66,27 @@ networks:
 
 x-common-keys-volume: &common-keys-volume
   type: nfs
-  o: addr=192.168.11.99,rw,nfsvers=4
+  o: addr=${NFS_SERVER},rw,nfsvers=4
   
 volumes:
  # NFS
-  homenas_mariadb_data: 
+  nfs_mariadb_data: 
     driver: local
     driver_opts:
       <<: *common-keys-volume
-      device: :/volume1/docker/swarm/database/mysql/mariadb10/data
-  homenas_mariadb_conf: 
+      device: :${NFS_DEVICE}/database/mysql/mariadb10/data
+  nfs_mariadb_conf: 
     driver: local
     driver_opts:
       <<: *common-keys-volume
-      device: :/volume1/docker/swarm/database/mysql/mariadb10/conf
-  homenas_mariadb_log: 
+      device: :${NFS_DEVICE}/database/mysql/mariadb10/conf
+  nfs_mariadb_log: 
     driver: local
     driver_opts:
       <<: *common-keys-volume
-      device: :/volume1/docker/swarm/database/mysql/mariadb10/log
-  homenas_phpmyadmin: 
+      device: :${NFS_DEVICE}/database/mysql/mariadb10/log
+  nfs_phpmyadmin: 
     driver: local
     driver_opts:
       <<: *common-keys-volume
-      device: :/volume1/docker/swarm/database/phpmyadmin/theme
+      device: :${NFS_DEVICE}/database/phpmyadmin/theme
