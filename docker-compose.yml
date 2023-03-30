@@ -21,7 +21,7 @@ services:
       placement:
         constraints:
           - node.labels.type == vm 
-          - node.labels.nas == database
+          - node.labels.database == true
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
@@ -43,7 +43,7 @@ services:
       placement:
         constraints:
           - node.labels.type == vm 
-          - node.labels.nas == database
+          - node.labels.database == true
 
 networks:
   network_cluster:
