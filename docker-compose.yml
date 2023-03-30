@@ -7,8 +7,9 @@ services:
     networks:
       - network_cluster       
     restart: always
-    env_file:     
-      - ../../stack.env
+    environment:
+      # 直接使用Portainer容器内的环境变量
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
     volumes:
       - homenas_mariadb_data:/var/lib/mysql
       - homenas_mariadb_conf:/etc/mysql/conf.d
@@ -34,8 +35,14 @@ services:
     networks:
       - network_cluster       
     restart: on-failure
-    env_file:     
-      - ../../stack.env
+    environment:
+      # 直接使用Portainer容器内的环境变量
+      PMA_ARBITRARY: ${PMA_ARBITRARY}
+      PMA_HOSTS: ${PMA_HOSTS}
+      PMA_VERBOSES: ${PMA_VERBOSES}
+      PMA_PORTS: ${PMA_PORTS}
+      PMA_USER: ${PMA_USER}
+      PMA_PASSWORD: ${PMA_PASSWORD}
     volumes:
       - homenas_phpmyadmin:/var/www/html/themes/mytheme  
     deploy:
