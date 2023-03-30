@@ -69,6 +69,7 @@ x-common-keys-volume: &common-keys-volume
   o: addr=192.168.11.99,rw,nfsvers=4
   
 volumes:
+ # NFS
   homenas_mariadb_data: 
     driver: local
     driver_opts:
