@@ -28,6 +28,7 @@ services:
           - node.labels.type == vm 
           - node.labels.database == true
 
+  # Phpmyadmin
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     networks:
