@@ -34,6 +34,8 @@ services:
     networks:
       - network_cluster       
     restart: on-failure
+    env_file:     
+      - ../../stack.env
     volumes:
       - homenas_phpmyadmin:/var/www/html/themes/mytheme  
     deploy:
