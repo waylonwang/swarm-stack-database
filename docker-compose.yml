@@ -18,6 +18,7 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.tcp.routers.mariadb.rule=HostSNI(`mysql.${DOMAIN_SWARM}`)"
+        - "traefik.tcp.routers.mariadb.tsl=true"
         - "traefik.tcp.routers.mariadb.entrypoints=mariadb"
         - "traefik.tcp.routers.mariadb.service=mariadb"
         - "traefik.tcp.services.mariadb.loadbalancer.server.port=3306"       
