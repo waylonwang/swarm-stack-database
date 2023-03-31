@@ -19,8 +19,8 @@ services:
         - "traefik.enable=true"
         - "traefik.tcp.routers.mariadb.rule=HostSNI(`*`)"
         - "traefik.tcp.routers.mariadb.entrypoints=mariadb"
-        - "traefik.tcp.routers.mariadb.service=mariadb"
-        - "traefik.tcp.services.mariadb.loadbalancer.server.port=3306"       
+        #- "traefik.tcp.routers.mariadb.service=mariadb"
+        #- "traefik.tcp.services.mariadb.loadbalancer.server.port=3306"       
       mode: replicated
       replicas: 1
       placement:
