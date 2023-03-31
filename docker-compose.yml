@@ -17,11 +17,11 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.mariadb.rule=HostSNI(`mysql.${DOMAIN_SWARM}`)"
-        - "traefik.http.routers.mariadb.entrypoints=mariadb"
-        - "traefik.http.routers.mariadb.service=mariadb"
-        - "traefik.http.routers.mariadb.middlewares=noauth-chain@file"
-        - "traefik.http.services.mariadb.loadbalancer.server.port=3306"       
+        - "traefik.tcp.routers.mariadb.rule=HostSNI(`mysql.${DOMAIN_SWARM}`)"
+        - "traefik.tcp.routers.mariadb.entrypoints=mariadb"
+        - "traefik.tcp.routers.mariadb.service=mariadb"
+        - "traefik.tcp.routers.mariadb.middlewares=noauth-chain@file"
+        - "traefik.tcp.services.mariadb.loadbalancer.server.port=3306"       
       mode: replicated
       replicas: 1
       placement:
