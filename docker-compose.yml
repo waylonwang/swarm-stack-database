@@ -20,7 +20,6 @@ services:
         - "traefik.tcp.routers.mariadb.rule=HostSNI(`mysql.${DOMAIN_SWARM}`)"
         - "traefik.tcp.routers.mariadb.entrypoints=mariadb"
         - "traefik.tcp.routers.mariadb.service=mariadb"
-        - "traefik.tcp.routers.mariadb.middlewares=noauth-chain@file"
         - "traefik.tcp.services.mariadb.loadbalancer.server.port=3306"       
       mode: replicated
       replicas: 1
