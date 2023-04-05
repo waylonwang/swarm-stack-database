@@ -5,7 +5,7 @@ services:
   mariadb:
     image: mariadb:latest
     networks:
-      - network_cluster       
+      - network_cluster
     restart: always
     environment:
       # 直接使用Portainer容器内的环境变量
@@ -20,19 +20,19 @@ services:
         - "traefik.tcp.routers.mariadb.rule=HostSNI(`*`)"
         - "traefik.tcp.routers.mariadb.entrypoints=mariadb"
         - "traefik.tcp.routers.mariadb.service=mariadb"
-        - "traefik.tcp.services.mariadb.loadbalancer.server.port=3306"       
+        - "traefik.tcp.services.mariadb.loadbalancer.server.port=3306"
       mode: replicated
       replicas: 1
       placement:
         constraints:
-          - node.labels.type == vm 
+          - node.labels.type == vm
           - node.labels.database == true
 
   # Phpmyadmin
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     networks:
-      - network_cluster       
+      - network_cluster
     restart: on-failure
     environment:
       # 直接使用Portainer容器内的环境变量
@@ -43,7 +43,7 @@ services:
       PMA_USER: ${PMA_USER}
       PMA_PASSWORD: ${PMA_PASSWORD}
     volumes:
-      - nfs_phpmyadmin:/var/www/html/themes/mytheme  
+      - nfs_phpmyadmin:/var/www/html/themes/mytheme
     deploy:
       labels:
         - "traefik.enable=true"
@@ -51,12 +51,12 @@ services:
         - "traefik.http.routers.phpmyadmin.entrypoints=websecure"
         - "traefik.http.routers.phpmyadmin.service=phpmyadmin"
         - "traefik.http.routers.phpmyadmin.middlewares=noauth-chain@file"
-        - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"       
+        - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"
       mode: replicated
       replicas: 1
       placement:
         constraints:
-          - node.labels.type == vm 
+          - node.labels.type == vm
           - node.labels.database == true
 
 networks:
@@ -66,25 +66,25 @@ networks:
 x-common-keys-volume: &common-keys-volume
   type: nfs
   o: addr=${NFS_SERVER},rw,nfsvers=4
-  
+
 volumes:
- # NFS
-  nfs_mariadb_data: 
+  # NFS
+  nfs_mariadb_data:
     driver: local
     driver_opts:
       <<: *common-keys-volume
       device: :${NFS_DEVICE}/database/mysql/mariadb10/data
-  nfs_mariadb_conf: 
+  nfs_mariadb_conf:
     driver: local
     driver_opts:
       <<: *common-keys-volume
       device: :${NFS_DEVICE}/database/mysql/mariadb10/conf
-  nfs_mariadb_log: 
+  nfs_mariadb_log:
     driver: local
     driver_opts:
       <<: *common-keys-volume
       device: :${NFS_DEVICE}/database/mysql/mariadb10/log
-  nfs_phpmyadmin: 
+  nfs_phpmyadmin:
     driver: local
     driver_opts:
       <<: *common-keys-volume
