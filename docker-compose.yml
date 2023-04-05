@@ -4,12 +4,12 @@ services:
   # Mariadb 10
   mariadb:
     image: mariadb:latest
-    networks:
-      - network_cluster
-    restart: always
+    networks: [network_cluster]
+    restart: on-failure
     environment:
       # 直接使用Portainer容器内的环境变量
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      TZ: ${TZ}
     volumes:
       - nfs_mariadb_data:/var/lib/mysql
       - nfs_mariadb_conf:/etc/mysql/conf.d
@@ -31,8 +31,7 @@ services:
   # Phpmyadmin
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
-    networks:
-      - network_cluster
+    networks: [network_cluster]
     restart: on-failure
     environment:
       # 直接使用Portainer容器内的环境变量
@@ -42,6 +41,7 @@ services:
       PMA_PORTS: ${PMA_PORTS}
       PMA_USER: ${PMA_USER}
       PMA_PASSWORD: ${PMA_PASSWORD}
+      TZ: ${TZ}
     volumes:
       - nfs_phpmyadmin:/var/www/html/themes/mytheme
     deploy:
@@ -52,6 +52,59 @@ services:
         - "traefik.http.routers.phpmyadmin.service=phpmyadmin"
         - "traefik.http.routers.phpmyadmin.middlewares=noauth-chain@file"
         - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.database == true
+
+  # Postgres
+  postgres:
+    image: postgres:latest
+    networks: [network_cluster]
+    restart: on-failure
+    environment:
+      # 直接使用Portainer容器内的环境变量
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      PGDATA: ${PGDATA}
+      TZ: ${TZ}
+    volumes:
+      - nfs_postgres:${PGDATA}
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.tcp.routers.postgres.rule=HostSNI(`*`)"
+        - "traefik.tcp.routers.postgres.entrypoints=postgres"
+        - "traefik.tcp.routers.postgres.service=postgres"
+        - "traefik.tcp.services.postgres.loadbalancer.server.port=5432"
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.database == true
+
+  # Pgadmin
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    networks: [network_cluster]
+    restart: on-failure
+    environment:
+      # 直接使用Portainer容器内的环境变量
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      TZ: ${TZ}
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.pgadmin.entrypoints=websecure"
+        - "traefik.http.routers.pgadmin.service=pgadmin"
+        - "traefik.http.routers.pgadmin.middlewares=noauth-chain@file"
+        - "traefik.http.services.pgadmin.loadbalancer.server.port=80"
       mode: replicated
       replicas: 1
       placement:
@@ -89,3 +142,8 @@ volumes:
     driver_opts:
       <<: *common-keys-volume
       device: :${NFS_DEVICE}/database/phpmyadmin/theme
+  nfs_postgres:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/database/postgres/data
