@@ -59,9 +59,9 @@ services:
           - node.labels.type == vm
           - node.labels.database == true
 
-  # Postgres
+  # Postgres 14
   postgres:
-    image: postgres:latest
+    image: postgres:14.7
     networks: [network_cluster]
     restart: on-failure
     environment:
