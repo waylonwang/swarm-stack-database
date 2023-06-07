@@ -118,6 +118,8 @@ services:
     image: mongo:5.0
     networks: [network_cluster]
     restart: on-failure
+    ports:
+      - "27017:27017"
     environment:
       # 直接使用Portainer容器内的环境变量
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}      
