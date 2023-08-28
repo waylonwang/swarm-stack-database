@@ -53,13 +53,13 @@ services:
         - "traefik.http.routers.phpmyadmin.service=phpmyadmin"
         - "traefik.http.routers.phpmyadmin.middlewares=noauth-chain@file"
         - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"
-        - homepage.group=Database
-        - homepage.name=MySQLAdmin
+        - homepage.group=Development
+        - homepage.name=MySQL Admin
         - homepage.icon=mysql.png
         - homepage.href=https://mysqladmin.${DOMAIN_SWARM}:4/
         - homepage.description=MySQL管理
         - homepage.ping=http://mysqladmin
-        - homepage.weight=1
+        - homepage.weight=3
       mode: replicated
       replicas: 1
       placement:
@@ -113,13 +113,13 @@ services:
         - "traefik.http.routers.pgadmin.service=pgadmin"
         - "traefik.http.routers.pgadmin.middlewares=noauth-chain@file"
         - "traefik.http.services.pgadmin.loadbalancer.server.port=80"
-        - homepage.group=Database
-        - homepage.name=PGAdmin
+        - homepage.group=Development
+        - homepage.name=PostgreSQL Admin
         - homepage.icon=postgres.png
         - homepage.href=https://pgadmin.${DOMAIN_SWARM}:4/
         - homepage.description=PostgreSQL管理
         - homepage.ping=http://pgadmin
-        - homepage.weight=2
+        - homepage.weight=4
       mode: replicated
       replicas: 1
       placement:
@@ -181,13 +181,13 @@ services:
         - "traefik.http.routers.mongoadmin.service=mongoadmin"
         - "traefik.http.routers.mongoadmin.middlewares=noauth-chain@file"
         - "traefik.http.services.mongoadmin.loadbalancer.server.port=8081"
-        - homepage.group=Database
-        - homepage.name=MongoaAmin
+        - homepage.group=Development
+        - homepage.name=MongoDB aAmin
         - homepage.icon=mongodb.png
         - homepage.href=https://mongoadmin.${DOMAIN_SWARM}:4/
         - homepage.description=MongoDB管理
         - homepage.ping=http://mongoadmin:8081
-        - homepage.weight=3
+        - homepage.weight=5
       mode: replicated
       replicas: 1
       placement:
