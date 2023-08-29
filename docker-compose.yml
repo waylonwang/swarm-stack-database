@@ -58,7 +58,7 @@ services:
         - homepage.icon=mysql.png
         - homepage.href=https://mysqladmin.${DOMAIN_SWARM}:4/
         - homepage.description=MySQL管理
-        - homepage.ping=http://mysqladmin
+        - homepage.ping=http://mysqladmin:80
         - homepage.weight=3
       mode: replicated
       replicas: 1
