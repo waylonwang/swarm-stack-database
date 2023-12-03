@@ -204,6 +204,20 @@ services:
     volumes:
      - nfs_redis_data:/data 
      - nfs_redis_config:/etc/redis  
+    deploy:
+      labels:
+        - homepage.group=Development
+        - homepage.name=Redis
+        - homepage.icon=redis.png
+        - homepage.description=Redis
+        - homepage.ping=http://redis:6379
+        - homepage.weight=6
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.database == true     
 
 networks:
   network_cluster:
