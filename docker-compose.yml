@@ -166,6 +166,8 @@ services:
       # 直接使用Portainer容器内的环境变量
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}      
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      UID: 999
+      GID: 999
       TZ: ${TZ}
     volumes:
       - nfs_mongo_data:/data
