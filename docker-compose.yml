@@ -170,8 +170,10 @@ services:
       GID: 999
       TZ: ${TZ}
     volumes:
-      - nfs_mongo_data:/data
-      - nfs_mongo_config:/etc/mongo
+      # - nfs_mongo_data:/data
+      # - nfs_mongo_config:/etc/mongo
+      - /root/mongo/data:/data
+      - /root/mongo/config:/etc/mongo
     deploy:
       labels:
         - "traefik.enable=true"
