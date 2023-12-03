@@ -166,14 +166,11 @@ services:
       # 直接使用Portainer容器内的环境变量
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}      
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
-      UID: 999
-      GID: 999
       TZ: ${TZ}
     volumes:
-      # - nfs_mongo_data:/data
-      # - nfs_mongo_config:/etc/mongo
-      - /root/mongo/data:/data
-      - /root/mongo/config:/etc/mongo
+      - nfs_mongo_data_db:/data/db
+      - nfs_mongo_data_configdb:/data/configdb
+      - nfs_mongo_config:/etc/mongo
     deploy:
       labels:
         - "traefik.enable=true"
@@ -291,11 +288,16 @@ volumes:
     driver_opts:
       <<: *common-keys-volume
       device: :${NFS_DEVICE}/database/pgvector/data  
-  nfs_mongo_data:
+  nfs_mongo_data_db:
     driver: local
     driver_opts:
       <<: *common-keys-volume
-      device: :${NFS_DEVICE}/database/mongo/data      
+      device: :${NFS_DEVICE}/database/mongo/data/db     
+  nfs_mongo_data_configdb:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/database/mongo/data/configdb     
   nfs_mongo_config:
     driver: local
     driver_opts:
