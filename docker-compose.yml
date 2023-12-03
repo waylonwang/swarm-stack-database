@@ -195,6 +195,16 @@ services:
           - node.labels.type == vm
           - node.labels.database == true
 
+  # Redis
+  redis:
+    image: redis:latest
+    command: redis-server /etc/redis/redis.conf    
+    networks: [network_cluster]
+    restart: on-failure
+    volumes:
+     - nfs_redis_data:/data 
+     - nfs_redis_config:/etc/redis  
+
 networks:
   network_cluster:
     external: true
@@ -240,3 +250,13 @@ volumes:
     driver_opts:
       <<: *common-keys-volume
       device: :${NFS_DEVICE}/database/mongo/config  
+  nfs_redis_data:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/database/redis/data      
+  nfs_redis_config:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/database/redis/config        
