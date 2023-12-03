@@ -95,6 +95,34 @@ services:
           - node.labels.type == vm
           - node.labels.database == true
 
+  # Postgres Vector
+  pgvector:
+    image: ankane/pgvector:v0.5.0
+    networks: [network_cluster]
+    restart: on-failure
+    environment:
+      # 直接使用Portainer容器内的环境变量
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      PGDATA: ${PGDATA}
+      TZ: ${TZ}
+    volumes:
+      - nfs_pgvector:${PGDATA}
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.tcp.routers.pgvector.rule=HostSNI(`*`)"
+        - "traefik.tcp.routers.pgvector.entrypoints=pgvector"
+        - "traefik.tcp.routers.pgvector.service=pgvector"
+        - "traefik.tcp.services.pgvector.loadbalancer.server.port=5432"
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.database == true          
+
   # Pgadmin
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -254,6 +282,11 @@ volumes:
     driver_opts:
       <<: *common-keys-volume
       device: :${NFS_DEVICE}/database/postgres/data
+  nfs_pgvector:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/database/pgvector/data  
   nfs_mongo_data:
     driver: local
     driver_opts:
