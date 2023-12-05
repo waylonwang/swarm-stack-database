@@ -22,6 +22,12 @@ services:
         - "traefik.tcp.routers.mariadb.entrypoints=mariadb"
         - "traefik.tcp.routers.mariadb.service=mariadb"
         - "traefik.tcp.services.mariadb.loadbalancer.server.port=3306"
+        - homepage.group=Development
+        - homepage.name=MySQL
+        - homepage.icon=mysql.png
+        - homepage.description=Mariadb 10
+        - homepage.ping=mariadb
+        - homepage.weight=10
       mode: replicated
       replicas: 1
       placement:
@@ -59,7 +65,7 @@ services:
         - homepage.href=https://mysqladmin.${DOMAIN_SWARM}:4/
         - homepage.description=MySQL管理
         - homepage.ping=http://phpmyadmin:80
-        - homepage.weight=3
+        - homepage.weight=11
       mode: replicated
       replicas: 1
       placement:
@@ -88,6 +94,12 @@ services:
         - "traefik.tcp.routers.postgres.entrypoints=postgres"
         - "traefik.tcp.routers.postgres.service=postgres"
         - "traefik.tcp.services.postgres.loadbalancer.server.port=5432"
+        - homepage.group=Development
+        - homepage.name=PostgreSQL
+        - homepage.icon=postgres.png
+        - homepage.description=PostgreSQL 14
+        - homepage.ping=postgres
+        - homepage.weight=12
       mode: replicated
       replicas: 1
       placement:
@@ -116,6 +128,12 @@ services:
         - "traefik.tcp.routers.pgvector.entrypoints=pgvector"
         - "traefik.tcp.routers.pgvector.service=pgvector"
         - "traefik.tcp.services.pgvector.loadbalancer.server.port=5432"
+        - homepage.group=Development
+        - homepage.name=PostgreSQL
+        - homepage.icon=postgres.png
+        - homepage.description=PostgreSQL
+        - homepage.ping=postgres
+        - homepage.weight=13
       mode: replicated
       replicas: 1
       placement:
@@ -147,7 +165,7 @@ services:
         - homepage.href=https://pgadmin.${DOMAIN_SWARM}:4/
         - homepage.description=PostgreSQL管理
         - homepage.ping=http://pgadmin
-        - homepage.weight=4
+        - homepage.weight=14
       mode: replicated
       replicas: 1
       placement:
@@ -178,6 +196,12 @@ services:
         - "traefik.tcp.routers.mongo.entrypoints=mongo"
         - "traefik.tcp.routers.mongo.service=mongo"
         - "traefik.tcp.services.mongo.loadbalancer.server.port=27017"
+        - homepage.group=Development
+        - homepage.name=MongoDB
+        - homepage.icon=mongodb.png
+        - homepage.description=MongoDB数据库
+        - homepage.ping=mongo
+        - homepage.weight=15
       mode: replicated
       replicas: 1
       placement:
@@ -211,12 +235,12 @@ services:
         - "traefik.http.routers.mongoadmin.middlewares=noauth-chain@file"
         - "traefik.http.services.mongoadmin.loadbalancer.server.port=8081"
         - homepage.group=Development
-        - homepage.name=MongoDB aAmin
+        - homepage.name=MongoDB Admin
         - homepage.icon=mongodb.png
         - homepage.href=https://mongoadmin.${DOMAIN_SWARM}:4/
         - homepage.description=MongoDB管理
         - homepage.ping=http://mongoadmin:8081
-        - homepage.weight=5
+        - homepage.weight=16
       mode: replicated
       replicas: 1
       placement:
@@ -239,8 +263,8 @@ services:
         - homepage.name=Redis
         - homepage.icon=redis.png
         - homepage.description=Redis
-        - homepage.ping=http://redis:6379
-        - homepage.weight=6
+        - homepage.ping=redis
+        - homepage.weight=17
       mode: replicated
       replicas: 1
       placement:
