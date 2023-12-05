@@ -22,7 +22,7 @@ services:
         - "traefik.tcp.routers.mariadb.entrypoints=mariadb"
         - "traefik.tcp.routers.mariadb.service=mariadb"
         - "traefik.tcp.services.mariadb.loadbalancer.server.port=3306"
-        - homepage.group=Development
+        - homepage.group=Database
         - homepage.name=MySQL
         - homepage.icon=mysql.png
         - homepage.description=Mariadb 10
@@ -59,7 +59,7 @@ services:
         - "traefik.http.routers.phpmyadmin.service=phpmyadmin"
         - "traefik.http.routers.phpmyadmin.middlewares=noauth-chain@file"
         - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"
-        - homepage.group=Development
+        - homepage.group=Database
         - homepage.name=MySQL Admin
         - homepage.icon=mysql.png
         - homepage.href=https://mysqladmin.${DOMAIN_SWARM}:4/
@@ -94,7 +94,7 @@ services:
         - "traefik.tcp.routers.postgres.entrypoints=postgres"
         - "traefik.tcp.routers.postgres.service=postgres"
         - "traefik.tcp.services.postgres.loadbalancer.server.port=5432"
-        - homepage.group=Development
+        - homepage.group=Database
         - homepage.name=PostgreSQL
         - homepage.icon=postgres.png
         - homepage.description=PostgreSQL 14
@@ -128,10 +128,10 @@ services:
         - "traefik.tcp.routers.pgvector.entrypoints=pgvector"
         - "traefik.tcp.routers.pgvector.service=pgvector"
         - "traefik.tcp.services.pgvector.loadbalancer.server.port=5432"
-        - homepage.group=Development
-        - homepage.name=PostgreSQL
+        - homepage.group=Database
+        - homepage.name=PGVector
         - homepage.icon=postgres.png
-        - homepage.description=PostgreSQL
+        - homepage.description=PostgreSQL Vector
         - homepage.ping=postgres
         - homepage.weight=13
       mode: replicated
@@ -159,7 +159,7 @@ services:
         - "traefik.http.routers.pgadmin.service=pgadmin"
         - "traefik.http.routers.pgadmin.middlewares=noauth-chain@file"
         - "traefik.http.services.pgadmin.loadbalancer.server.port=80"
-        - homepage.group=Development
+        - homepage.group=Database
         - homepage.name=PostgreSQL Admin
         - homepage.icon=postgres.png
         - homepage.href=https://pgadmin.${DOMAIN_SWARM}:4/
@@ -196,7 +196,7 @@ services:
         - "traefik.tcp.routers.mongo.entrypoints=mongo"
         - "traefik.tcp.routers.mongo.service=mongo"
         - "traefik.tcp.services.mongo.loadbalancer.server.port=27017"
-        - homepage.group=Development
+        - homepage.group=Database
         - homepage.name=MongoDB
         - homepage.icon=mongodb.png
         - homepage.description=MongoDB数据库
@@ -234,7 +234,7 @@ services:
         - "traefik.http.routers.mongoadmin.service=mongoadmin"
         - "traefik.http.routers.mongoadmin.middlewares=noauth-chain@file"
         - "traefik.http.services.mongoadmin.loadbalancer.server.port=8081"
-        - homepage.group=Development
+        - homepage.group=Database
         - homepage.name=MongoDB Admin
         - homepage.icon=mongodb.png
         - homepage.href=https://mongoadmin.${DOMAIN_SWARM}:4/
@@ -259,7 +259,7 @@ services:
      - nfs_redis_config:/etc/redis  
     deploy:
       labels:
-        - homepage.group=Development
+        - homepage.group=Database
         - homepage.name=Redis
         - homepage.icon=redis.png
         - homepage.description=Redis
