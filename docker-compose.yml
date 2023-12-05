@@ -64,7 +64,7 @@ services:
         - homepage.icon=mysql.png
         - homepage.href=https://mysqladmin.${DOMAIN_SWARM}:4/
         - homepage.description=MySQL管理
-        - homepage.ping=http://phpmyadmin:80
+        - homepage.siteMonitor=http://phpmyadmin:80
         - homepage.weight=11
       mode: replicated
       replicas: 1
@@ -164,7 +164,7 @@ services:
         - homepage.icon=postgres.png
         - homepage.href=https://pgadmin.${DOMAIN_SWARM}:4/
         - homepage.description=PostgreSQL管理
-        - homepage.ping=http://pgadmin
+        - homepage.siteMonitor=http://pgadmin
         - homepage.weight=14
       mode: replicated
       replicas: 1
@@ -239,7 +239,7 @@ services:
         - homepage.icon=mongodb.png
         - homepage.href=https://mongoadmin.${DOMAIN_SWARM}:4/
         - homepage.description=MongoDB管理
-        - homepage.ping=http://mongoadmin:8081
+        - homepage.siteMonitor=http://mongoadmin:8081
         - homepage.weight=16
       mode: replicated
       replicas: 1
