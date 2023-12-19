@@ -123,11 +123,11 @@ services:
       - nfs_pgvector:${PGDATA}
     deploy:
       labels:
-        - "traefik.enable=true"
-        - "traefik.tcp.routers.pgvector.rule=HostSNI(`*`)"
-        - "traefik.tcp.routers.pgvector.entrypoints=pgvector"
-        - "traefik.tcp.routers.pgvector.service=pgvector"
-        - "traefik.tcp.services.pgvector.loadbalancer.server.port=5432"
+        # - "traefik.enable=true"
+        # - "traefik.tcp.routers.pgvector.rule=HostSNI(`*`)"
+        # - "traefik.tcp.routers.pgvector.entrypoints=pgvector"
+        # - "traefik.tcp.routers.pgvector.service=pgvector"
+        # - "traefik.tcp.services.pgvector.loadbalancer.server.port=5432"
         - homepage.group=Database & Development
         - homepage.name=PGVector
         - homepage.icon=postgres.png
