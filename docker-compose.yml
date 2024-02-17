@@ -274,7 +274,35 @@ services:
       placement:
         constraints:
           - node.labels.type == vm
-          - node.labels.database == true     
+          - node.labels.database == true  
+
+  redisui:
+    image: patrikx3/p3x-redis-ui:latest
+    networks: [network_cluster]
+    restart: on-failure
+    volumes:
+        - nfs_redis_ui:/settings   
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.redisui.rule=Host(`redisui.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.redisui.entrypoints=websecure"
+        - "traefik.http.routers.redisui.service=redisui"
+        - "traefik.http.routers.redisui.middlewares=noauth-chain@file"
+        - "traefik.http.services.redisui.loadbalancer.server.port=7843"
+        - homepage.group=Database & Development
+        - homepage.name=Redis UI
+        - homepage.icon=redis.png
+        - homepage.href=https://redisui.${DOMAIN_SWARM}:4/
+        - homepage.description=Redis管理
+        - homepage.ping=http://redisui:7843
+        - homepage.weight=18
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.database == true
 
 networks:
   network_cluster:
@@ -340,4 +368,9 @@ volumes:
     driver: local
     driver_opts:
       <<: *common-keys-volume
-      device: :${NFS_DEVICE}/database/redis/config        
+      device: :${NFS_DEVICE}/database/redis/config
+  nfs_redis_ui:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/database/redisui        
