@@ -54,7 +54,7 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.phpmyadmin.rule=Host(`mysqladmin.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.phpmyadmin.rule=Host(`mysqladmin.${DOMAIN_SWARM}`,`mysqladmin.${DOMAIN_EMERGENCY}`)"
         - "traefik.http.routers.phpmyadmin.entrypoints=websecure"
         - "traefik.http.routers.phpmyadmin.service=phpmyadmin"
         - "traefik.http.routers.phpmyadmin.middlewares=noauth-chain@file"
@@ -154,7 +154,7 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.${DOMAIN_SWARM}`,`pgadmin.${DOMAIN_EMERGENCY}`)"
         - "traefik.http.routers.pgadmin.entrypoints=websecure"
         - "traefik.http.routers.pgadmin.service=pgadmin"
         - "traefik.http.routers.pgadmin.middlewares=noauth-chain@file"
@@ -231,7 +231,7 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.mongoadmin.rule=Host(`mongoadmin.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.mongoadmin.rule=Host(`mongoadmin.${DOMAIN_SWARM}`,`mongoadmin.${DOMAIN_EMERGENCY}`)"
         - "traefik.http.routers.mongoadmin.entrypoints=websecure"
         - "traefik.http.routers.mongoadmin.service=mongoadmin"
         - "traefik.http.routers.mongoadmin.middlewares=noauth-chain@file"
@@ -285,7 +285,7 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.redisui.rule=Host(`redisui.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.redisui.rule=Host(`redisui.${DOMAIN_SWARM}`,`redisui.${DOMAIN_EMERGENCY}`)"
         - "traefik.http.routers.redisui.entrypoints=websecure"
         - "traefik.http.routers.redisui.service=redisui"
         - "traefik.http.routers.redisui.middlewares=noauth-chain@file"
