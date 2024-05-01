@@ -57,7 +57,7 @@ services:
         - "traefik.http.routers.phpmyadmin.rule=Host(`mysqladmin.${DOMAIN_SWARM}`,`mysqladmin.${DOMAIN_EMERGENCY}`)"
         - "traefik.http.routers.phpmyadmin.entrypoints=websecure"
         - "traefik.http.routers.phpmyadmin.service=phpmyadmin"
-        - "traefik.http.routers.phpmyadmin.middlewares=noauth-chain@file"
+        - "traefik.http.routers.phpmyadmin.middlewares=auth-chain@file"
         - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"
         - homepage.group=Database & Development
         - homepage.name=MySQL Admin
