@@ -37,7 +37,7 @@ services:
 
   # Phpmyadmin
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
+    image: phpmyadmin:latest
     networks: [network_cluster]
     restart: on-failure
     environment:
