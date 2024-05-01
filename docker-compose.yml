@@ -295,7 +295,7 @@ services:
         - homepage.icon=redis.png
         - homepage.href=https://redisui.${DOMAIN_SWARM}:4/
         - homepage.description=Redis管理
-        - homepage.ping=http://redisui:7843
+        - homepage.siteMonitor=http://redisui:7843
         - homepage.weight=18
       mode: replicated
       replicas: 1
