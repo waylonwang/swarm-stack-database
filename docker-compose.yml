@@ -34,6 +34,11 @@ services:
         constraints:
           - node.labels.type == vm
           - node.labels.database == true
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.database.mariadb
+        fluentd-async-connect: "true"  
 
   # Phpmyadmin
   phpmyadmin:
