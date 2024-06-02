@@ -283,6 +283,11 @@ services:
         constraints:
           - node.labels.type == vm
           - node.labels.database == true  
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.database.redis
+        fluentd-async-connect: "true"  
 
   redisui:
     image: patrikx3/p3x-redis-ui:latest
