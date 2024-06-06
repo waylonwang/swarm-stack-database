@@ -39,11 +39,11 @@ services:
         fluentd-async-connect: "true"
     deploy:
       labels:
-        - "traefik.enable=true"
-        - "traefik.tcp.routers.mariadb.rule=HostSNI(`*`)"
-        - "traefik.tcp.routers.mariadb.entrypoints=mariadb"
-        - "traefik.tcp.routers.mariadb.service=mariadb"
-        - "traefik.tcp.services.mariadb.loadbalancer.server.port=3306"
+        - traefik.enable=true
+        - traefik.tcp.routers.mariadb.rule=HostSNI(`*`)
+        - traefik.tcp.routers.mariadb.entrypoints=mariadb
+        - traefik.tcp.routers.mariadb.service=mariadb
+        - traefik.tcp.services.mariadb.loadbalancer.server.port=3306
         - homepage.group=Database & Development
         - homepage.name=MySQL
         - homepage.icon=mysql.png
@@ -76,12 +76,12 @@ services:
         fluentd-async-connect: "true"
     deploy:
       labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.phpmyadmin.rule=Host(`mysqladmin.${DOMAIN_SWARM}`,`mysqladmin.${DOMAIN_EMERGENCY}`)"
-        - "traefik.http.routers.phpmyadmin.entrypoints=websecure"
-        - "traefik.http.routers.phpmyadmin.service=phpmyadmin"
-        - "traefik.http.routers.phpmyadmin.middlewares=auth,normal-chain@file"
-        - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"
+        - traefik.enable=true
+        - traefik.http.routers.phpmyadmin.rule=Host(`mysqladmin.${DOMAIN_SWARM}`,`mysqladmin.${DOMAIN_EMERGENCY}`)
+        - traefik.http.routers.phpmyadmin.entrypoints=websecure
+        - traefik.http.routers.phpmyadmin.service=phpmyadmin
+        - traefik.http.routers.phpmyadmin.middlewares=auth,normal-chain@file
+        - traefik.http.services.phpmyadmin.loadbalancer.server.port=80
         - homepage.group=Database & Development
         - homepage.name=MySQL Admin
         - homepage.icon=mysql.png
@@ -113,11 +113,11 @@ services:
         fluentd-async-connect: "true"
     deploy:
       labels:
-        - "traefik.enable=true"
-        - "traefik.tcp.routers.postgres.rule=HostSNI(`*`)"
-        - "traefik.tcp.routers.postgres.entrypoints=postgres"
-        - "traefik.tcp.routers.postgres.service=postgres"
-        - "traefik.tcp.services.postgres.loadbalancer.server.port=5432"
+        - traefik.enable=true
+        - traefik.tcp.routers.postgres.rule=HostSNI(`*`)
+        - traefik.tcp.routers.postgres.entrypoints=postgres
+        - traefik.tcp.routers.postgres.service=postgres
+        - traefik.tcp.services.postgres.loadbalancer.server.port=5432
         - homepage.group=Database & Development
         - homepage.name=PostgreSQL
         - homepage.icon=postgres.png
@@ -148,11 +148,11 @@ services:
         fluentd-async-connect: "true"
     deploy:
       labels:
-        # - "traefik.enable=true"
-        # - "traefik.tcp.routers.pgvector.rule=HostSNI(`*`)"
-        # - "traefik.tcp.routers.pgvector.entrypoints=pgvector"
-        # - "traefik.tcp.routers.pgvector.service=pgvector"
-        # - "traefik.tcp.services.pgvector.loadbalancer.server.port=5432"
+        # - traefik.enable=true
+        # - traefik.tcp.routers.pgvector.rule=HostSNI(`*`)
+        # - traefik.tcp.routers.pgvector.entrypoints=pgvector
+        # - traefik.tcp.routers.pgvector.service=pgvector
+        # - traefik.tcp.services.pgvector.loadbalancer.server.port=5432
         - homepage.group=Database & Development
         - homepage.name=PGVector
         - homepage.icon=postgres.png
@@ -182,12 +182,12 @@ services:
         fluentd-async-connect: "true"
     deploy:
       labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.${DOMAIN_SWARM}`,`pgadmin.${DOMAIN_EMERGENCY}`)"
-        - "traefik.http.routers.pgadmin.entrypoints=websecure"
-        - "traefik.http.routers.pgadmin.service=pgadmin"
-        - "traefik.http.routers.pgadmin.middlewares=auth,normal-chain@file"
-        - "traefik.http.services.pgadmin.loadbalancer.server.port=80"
+        - traefik.enable=true
+        - traefik.http.routers.pgadmin.rule=Host(`pgadmin.${DOMAIN_SWARM}`,`pgadmin.${DOMAIN_EMERGENCY}`)
+        - traefik.http.routers.pgadmin.entrypoints=websecure
+        - traefik.http.routers.pgadmin.service=pgadmin
+        - traefik.http.routers.pgadmin.middlewares=auth,normal-chain@file
+        - traefik.http.services.pgadmin.loadbalancer.server.port=80
         - homepage.group=Database & Development
         - homepage.name=PostgreSQL Admin
         - homepage.icon=postgres.png
@@ -221,11 +221,11 @@ services:
         fluentd-async-connect: "true"
     deploy:
       labels:
-        - "traefik.enable=true"
-        - "traefik.tcp.routers.mongo.rule=HostSNI(`*`)"
-        - "traefik.tcp.routers.mongo.entrypoints=mongo"
-        - "traefik.tcp.routers.mongo.service=mongo"
-        - "traefik.tcp.services.mongo.loadbalancer.server.port=27017"
+        - traefik.enable=true
+        - traefik.tcp.routers.mongo.rule=HostSNI(`*`)
+        - traefik.tcp.routers.mongo.entrypoints=mongo
+        - traefik.tcp.routers.mongo.service=mongo
+        - traefik.tcp.services.mongo.loadbalancer.server.port=27017
         - homepage.group=Database & Development
         - homepage.name=MongoDB
         - homepage.icon=mongodb.png
@@ -259,12 +259,12 @@ services:
         fluentd-async-connect: "true"
     deploy:
       labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.mongoadmin.rule=Host(`mongoadmin.${DOMAIN_SWARM}`,`mongoadmin.${DOMAIN_EMERGENCY}`)"
-        - "traefik.http.routers.mongoadmin.entrypoints=websecure"
-        - "traefik.http.routers.mongoadmin.service=mongoadmin"
-        - "traefik.http.routers.mongoadmin.middlewares=auth,normal-chain@file"
-        - "traefik.http.services.mongoadmin.loadbalancer.server.port=8081"
+        - traefik.enable=true
+        - traefik.http.routers.mongoadmin.rule=Host(`mongoadmin.${DOMAIN_SWARM}`,`mongoadmin.${DOMAIN_EMERGENCY}`)
+        - traefik.http.routers.mongoadmin.entrypoints=websecure
+        - traefik.http.routers.mongoadmin.service=mongoadmin
+        - traefik.http.routers.mongoadmin.middlewares=auth,normal-chain@file
+        - traefik.http.services.mongoadmin.loadbalancer.server.port=8081
         - homepage.group=Database & Development
         - homepage.name=MongoDB Admin
         - homepage.icon=mongodb.png
@@ -316,12 +316,12 @@ services:
         fluentd-async-connect: "true"
     deploy:
       labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.redisui.rule=Host(`redisui.${DOMAIN_SWARM}`,`redisui.${DOMAIN_EMERGENCY}`)"
-        - "traefik.http.routers.redisui.entrypoints=websecure"
-        - "traefik.http.routers.redisui.service=redisui"
-        - "traefik.http.routers.redisui.middlewares=auth,normal-chain@file"
-        - "traefik.http.services.redisui.loadbalancer.server.port=7843"
+        - traefik.enable=true
+        - traefik.http.routers.redisui.rule=Host(`redisui.${DOMAIN_SWARM}`,`redisui.${DOMAIN_EMERGENCY}`)
+        - traefik.http.routers.redisui.entrypoints=websecure
+        - traefik.http.routers.redisui.service=redisui
+        - traefik.http.routers.redisui.middlewares=auth,normal-chain@file
+        - traefik.http.services.redisui.loadbalancer.server.port=7843
         - homepage.group=Database & Development
         - homepage.name=Redis UI
         - homepage.icon=redis.png
