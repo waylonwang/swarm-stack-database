@@ -1,3 +1,4 @@
+---
 # Update Time: 2024-05-01 18:02
 version: "3.4"
 
@@ -406,4 +407,5 @@ volumes:
     driver: local
     driver_opts:
       <<: *driver-common-ref
-      device: :${NFS_DEVICE}/database/redisui        
+      device: :${NFS_DEVICE}/database/redisui
+...
