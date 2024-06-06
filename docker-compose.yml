@@ -2,7 +2,9 @@
 version: "3.4"
 
 services:
-  # Mariadb 10
+  # ------------------------------------------------------------
+  # Mariadb 10 
+  # ------------------------------------------------------------
   mariadb:
     image: mariadb:latest
     networks: [network_cluster]
@@ -15,6 +17,11 @@ services:
       - nfs_mariadb_data:/var/lib/mysql
       - nfs_mariadb_conf:/etc/mysql/conf.d
       - nfs_mariadb_log:/var/log/mysql
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.database.mariadb
+        fluentd-async-connect: "true"  
     deploy:
       labels:
         - "traefik.enable=true"
@@ -34,13 +41,10 @@ services:
         constraints:
           - node.labels.type == vm
           - node.labels.database == true
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.database.mariadb
-        fluentd-async-connect: "true"  
 
+  # ------------------------------------------------------------
   # Phpmyadmin
+  # ------------------------------------------------------------
   phpmyadmin:
     image: phpmyadmin:latest
     networks: [network_cluster]
@@ -56,6 +60,11 @@ services:
       TZ: ${TZ}
     volumes:
       - nfs_phpmyadmin:/var/www/html/themes/mytheme
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.database.phpmyadmin
+        fluentd-async-connect: "true"  
     deploy:
       labels:
         - "traefik.enable=true"
@@ -78,7 +87,9 @@ services:
           - node.labels.type == vm
           - node.labels.database == true
 
+  # ------------------------------------------------------------
   # Postgres 14
+  # ------------------------------------------------------------
   postgres:
     image: postgres:14.7
     networks: [network_cluster]
@@ -92,6 +103,11 @@ services:
       TZ: ${TZ}
     volumes:
       - nfs_postgres:${PGDATA}
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.database.postgres
+        fluentd-async-connect: "true"  
     deploy:
       labels:
         - "traefik.enable=true"
@@ -112,7 +128,9 @@ services:
           - node.labels.type == vm
           - node.labels.database == true
 
+  # ------------------------------------------------------------
   # Postgres Vector
+  # ------------------------------------------------------------
   pgvector:
     image: ankane/pgvector:v0.5.0
     networks: [network_cluster]
@@ -126,6 +144,11 @@ services:
       TZ: ${TZ}
     volumes:
       - nfs_pgvector:${PGDATA}
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.database.pgvector
+        fluentd-async-connect: "true"  
     deploy:
       labels:
         # - "traefik.enable=true"
@@ -146,7 +169,9 @@ services:
           - node.labels.type == vm
           - node.labels.database == true          
 
+  # ------------------------------------------------------------
   # Pgadmin
+  # ------------------------------------------------------------
   pgadmin:
     image: dpage/pgadmin4:latest
     networks: [network_cluster]
@@ -159,6 +184,11 @@ services:
     volumes:
       - nfs_pgadmin_data:/var/lib/pgadmin      
       - nfs_pgadmin_src:/pgadmin4     
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.database.pgadmin
+        fluentd-async-connect: "true"  
     deploy:
       labels:
         - "traefik.enable=true"
@@ -181,7 +211,9 @@ services:
           - node.labels.type == vm
           - node.labels.database == true
 
+  # ------------------------------------------------------------
   # Mongo 5
+  # ------------------------------------------------------------
   mongo:
     image: mongo:5.0
     networks: [network_cluster]
@@ -197,6 +229,11 @@ services:
       - nfs_mongo_data_db:/data/db
       - nfs_mongo_data_configdb:/data/configdb
       - nfs_mongo_config:/etc/mongo
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.database.mongo
+        fluentd-async-connect: "true"  
     deploy:
       labels:
         - "traefik.enable=true"
@@ -219,7 +256,9 @@ services:
           - node.labels.database == true
           # - node.labels.nas == primary            
 
+  # ------------------------------------------------------------
   # Mongo-Express
+  # ------------------------------------------------------------
   mongoadmin:
     image: mongo-express:0.49.0
     networks: [network_cluster]
@@ -236,6 +275,11 @@ services:
       # ME_CONFIG_BASICAUTH_PASSWORD: ${ME_CONFIG_BASICAUTH_PASSWORD}
       ME_CONFIG_MONGODB_URL: ${ME_CONFIG_MONGODB_URL}
       TZ: ${TZ}
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.database.mongoadmin
+        fluentd-async-connect: "true"  
     deploy:
       labels:
         - "traefik.enable=true"
@@ -258,7 +302,9 @@ services:
           - node.labels.type == vm
           - node.labels.database == true
 
+  # ------------------------------------------------------------
   # Redis
+  # ------------------------------------------------------------
   redis:
     image: redis:latest
     command: redis-server /etc/redis/redis.conf    
@@ -269,6 +315,11 @@ services:
     volumes:
       - nfs_redis_data:/data 
       - nfs_redis_config:/etc/redis  
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.database.redis
+        fluentd-async-connect: "true"  
     deploy:
       labels:
         - homepage.group=Database & Development
@@ -283,18 +334,21 @@ services:
         constraints:
           - node.labels.type == vm
           - node.labels.database == true  
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.database.redis
-        fluentd-async-connect: "true"  
 
+  # ------------------------------------------------------------
+  # Redis UI
+  # ------------------------------------------------------------
   redisui:
     image: patrikx3/p3x-redis-ui:latest
     networks: [network_cluster]
     restart: on-failure
     volumes:
         - nfs_redis_ui:/settings   
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.database.redisui
+        fluentd-async-connect: "true"  
     deploy:
       labels:
         - "traefik.enable=true"
