@@ -286,6 +286,8 @@ services:
     command: redis-server /etc/redis/redis.conf
     ports:
       - "6379:6379"
+    environment:
+      <<: *env-common-ref
     volumes:
       - nfs_redis_data:/data
       - nfs_redis_config:/etc/redis
@@ -310,6 +312,8 @@ services:
   redisui:
     <<: *service-common-ref
     image: patrikx3/p3x-redis-ui:latest
+    environment:
+      <<: *env-common-ref
     volumes:
         - nfs_redis_ui:/settings
     logging:
