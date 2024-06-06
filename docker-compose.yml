@@ -1,14 +1,29 @@
 # Update Time: 2024-05-01 18:02
 version: "3.4"
 
+x-defines:
+  service-common: &service-common-ref
+    networks: [network_cluster]
+    restart: on-failure
+  deploy-common: &deploy-common-ref
+    mode: replicated
+    replicas: 1
+  placement-default: &placement-default-ref
+    placement:
+      constraints:
+        - node.labels.type == vm
+        - node.labels.database == true
+  driver-common: &driver-common-ref
+    type: nfs
+    o: addr=${NFS_SERVER},rw,nfsvers=4
+
 services:
   # ------------------------------------------------------------
-  # Mariadb 10 
+  # Mariadb 10
   # ------------------------------------------------------------
   mariadb:
     image: mariadb:latest
-    networks: [network_cluster]
-    restart: on-failure
+    <<: *service-common-ref
     environment:
       # 直接使用Portainer容器内的环境变量
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
@@ -21,7 +36,7 @@ services:
       driver: fluentd
       options:
         tag: docker.database.mariadb
-        fluentd-async-connect: "true"  
+        fluentd-async-connect: "true"
     deploy:
       labels:
         - "traefik.enable=true"
@@ -35,20 +50,14 @@ services:
         - homepage.description=Mariadb 10
         - homepage.ping=mariadb
         - homepage.weight=10
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.database == true
+      <<: [*deploy-common-ref,*placement-default-ref]
 
   # ------------------------------------------------------------
   # Phpmyadmin
   # ------------------------------------------------------------
   phpmyadmin:
     image: phpmyadmin:latest
-    networks: [network_cluster]
-    restart: on-failure
+    <<: *service-common-ref
     environment:
       # 直接使用Portainer容器内的环境变量
       PMA_ARBITRARY: ${PMA_ARBITRARY}
@@ -64,7 +73,7 @@ services:
       driver: fluentd
       options:
         tag: docker.database.phpmyadmin
-        fluentd-async-connect: "true"  
+        fluentd-async-connect: "true"
     deploy:
       labels:
         - "traefik.enable=true"
@@ -80,20 +89,14 @@ services:
         - homepage.description=MySQL管理
         - homepage.siteMonitor=http://phpmyadmin:80
         - homepage.weight=11
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.database == true
+      <<: [*deploy-common-ref,*placement-default-ref]
 
   # ------------------------------------------------------------
   # Postgres 14
   # ------------------------------------------------------------
   postgres:
     image: postgres:14.7
-    networks: [network_cluster]
-    restart: on-failure
+    <<: *service-common-ref
     environment:
       # 直接使用Portainer容器内的环境变量
       POSTGRES_DB: ${POSTGRES_DB}
@@ -107,7 +110,7 @@ services:
       driver: fluentd
       options:
         tag: docker.database.postgres
-        fluentd-async-connect: "true"  
+        fluentd-async-connect: "true"
     deploy:
       labels:
         - "traefik.enable=true"
@@ -121,20 +124,14 @@ services:
         - homepage.description=PostgreSQL 14
         - homepage.ping=postgres
         - homepage.weight=12
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.database == true
+      <<: [*deploy-common-ref,*placement-default-ref]
 
   # ------------------------------------------------------------
   # Postgres Vector
   # ------------------------------------------------------------
   pgvector:
     image: ankane/pgvector:v0.5.0
-    networks: [network_cluster]
-    restart: on-failure
+    <<: *service-common-ref
     environment:
       # 直接使用Portainer容器内的环境变量
       POSTGRES_DB: ${POSTGRES_DB}
@@ -148,7 +145,7 @@ services:
       driver: fluentd
       options:
         tag: docker.database.pgvector
-        fluentd-async-connect: "true"  
+        fluentd-async-connect: "true"
     deploy:
       labels:
         # - "traefik.enable=true"
@@ -162,33 +159,27 @@ services:
         - homepage.description=PostgreSQL Vector
         - homepage.ping=postgres
         - homepage.weight=13
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.database == true          
+      <<: [*deploy-common-ref,*placement-default-ref]
 
   # ------------------------------------------------------------
   # Pgadmin
   # ------------------------------------------------------------
   pgadmin:
     image: dpage/pgadmin4:latest
-    networks: [network_cluster]
-    restart: on-failure
+    <<: *service-common-ref
     environment:
       # 直接使用Portainer容器内的环境变量
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
       TZ: ${TZ}
     volumes:
-      - nfs_pgadmin_data:/var/lib/pgadmin      
-      - nfs_pgadmin_src:/pgadmin4     
+      - nfs_pgadmin_data:/var/lib/pgadmin
+      - nfs_pgadmin_src:/pgadmin4
     logging:
       driver: fluentd
       options:
         tag: docker.database.pgadmin
-        fluentd-async-connect: "true"  
+        fluentd-async-connect: "true"
     deploy:
       labels:
         - "traefik.enable=true"
@@ -204,25 +195,19 @@ services:
         - homepage.description=PostgreSQL管理
         - homepage.siteMonitor=http://pgadmin
         - homepage.weight=14
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.database == true
+      <<: [*deploy-common-ref,*placement-default-ref]
 
   # ------------------------------------------------------------
   # Mongo 5
   # ------------------------------------------------------------
   mongo:
     image: mongo:5.0
-    networks: [network_cluster]
-    restart: on-failure
+    <<: *service-common-ref
     ports:
       - "27017:27017"
     environment:
       # 直接使用Portainer容器内的环境变量
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}      
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
       TZ: ${TZ}
     volumes:
@@ -233,7 +218,7 @@ services:
       driver: fluentd
       options:
         tag: docker.database.mongo
-        fluentd-async-connect: "true"  
+        fluentd-async-connect: "true"
     deploy:
       labels:
         - "traefik.enable=true"
@@ -247,22 +232,14 @@ services:
         - homepage.description=MongoDB数据库
         - homepage.ping=mongo
         - homepage.weight=15
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          # - node.labels.type == nas
-          - node.labels.database == true
-          # - node.labels.nas == primary            
+      <<: [*deploy-common-ref,*placement-default-ref]
 
   # ------------------------------------------------------------
   # Mongo-Express
   # ------------------------------------------------------------
   mongoadmin:
     image: mongo-express:0.49.0
-    networks: [network_cluster]
-    restart: on-failure
+    <<: *service-common-ref
     environment:
       # 直接使用Portainer容器内的环境变量
       ME_CONFIG_OPTIONS_EDITORTHEME: ${ME_CONFIG_OPTIONS_EDITORTHEME}
@@ -279,7 +256,7 @@ services:
       driver: fluentd
       options:
         tag: docker.database.mongoadmin
-        fluentd-async-connect: "true"  
+        fluentd-async-connect: "true"
     deploy:
       labels:
         - "traefik.enable=true"
@@ -295,31 +272,25 @@ services:
         - homepage.description=MongoDB管理
         - homepage.siteMonitor=http://mongoadmin:8081
         - homepage.weight=16
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.database == true
+      <<: [*deploy-common-ref,*placement-default-ref]
 
   # ------------------------------------------------------------
   # Redis
   # ------------------------------------------------------------
   redis:
     image: redis:latest
-    command: redis-server /etc/redis/redis.conf    
-    networks: [network_cluster]
-    restart: on-failure
+    command: redis-server /etc/redis/redis.conf
+    <<: *service-common-ref
     ports:
       - "6379:6379"
     volumes:
-      - nfs_redis_data:/data 
-      - nfs_redis_config:/etc/redis  
+      - nfs_redis_data:/data
+      - nfs_redis_config:/etc/redis
     logging:
       driver: fluentd
       options:
         tag: docker.database.redis
-        fluentd-async-connect: "true"  
+        fluentd-async-connect: "true"
     deploy:
       labels:
         - homepage.group=Database & Development
@@ -328,27 +299,21 @@ services:
         - homepage.description=Redis
         - homepage.ping=redis
         - homepage.weight=17
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.database == true  
+      <<: [*deploy-common-ref,*placement-default-ref]
 
   # ------------------------------------------------------------
   # Redis UI
   # ------------------------------------------------------------
   redisui:
     image: patrikx3/p3x-redis-ui:latest
-    networks: [network_cluster]
-    restart: on-failure
+    <<: *service-common-ref
     volumes:
-        - nfs_redis_ui:/settings   
+        - nfs_redis_ui:/settings
     logging:
       driver: fluentd
       options:
         tag: docker.database.redisui
-        fluentd-async-connect: "true"  
+        fluentd-async-connect: "true"
     deploy:
       labels:
         - "traefik.enable=true"
@@ -364,90 +329,81 @@ services:
         - homepage.description=Redis管理
         - homepage.siteMonitor=http://redisui:7843
         - homepage.weight=18
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.database == true
+      <<: [*deploy-common-ref,*placement-default-ref]
 
 networks:
   network_cluster:
     external: true
-
-x-common-keys-volume: &common-keys-volume
-  type: nfs
-  o: addr=${NFS_SERVER},rw,nfsvers=4
 
 volumes:
   # NFS
   nfs_mariadb_data:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
+      <<: *driver-common-ref
       device: :${NFS_DEVICE}/database/mysql/mariadb10/data
   nfs_mariadb_conf:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
+      <<: *driver-common-ref
       device: :${NFS_DEVICE}/database/mysql/mariadb10/conf
   nfs_mariadb_log:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
+      <<: *driver-common-ref
       device: :${NFS_DEVICE}/database/mysql/mariadb10/log
   nfs_phpmyadmin:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
+      <<: *driver-common-ref
       device: :${NFS_DEVICE}/database/phpmyadmin/theme
   nfs_postgres:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
+      <<: *driver-common-ref
       device: :${NFS_DEVICE}/database/postgres/data
   nfs_pgvector:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/database/pgvector/data  
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/database/pgvector/data
   nfs_pgadmin_data:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
+      <<: *driver-common-ref
       device: :${NFS_DEVICE}/database/pgadmin/data
   nfs_pgadmin_src:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
+      <<: *driver-common-ref
       device: :${NFS_DEVICE}/database/pgadmin/src
   nfs_mongo_data_db:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/database/mongo/data/db     
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/database/mongo/data/db
   nfs_mongo_data_configdb:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/database/mongo/data/configdb     
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/database/mongo/data/configdb
   nfs_mongo_config:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/database/mongo/config  
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/database/mongo/config
   nfs_redis_data:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/database/redis/data      
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/database/redis/data
   nfs_redis_config:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
+      <<: *driver-common-ref
       device: :${NFS_DEVICE}/database/redis/config
   nfs_redis_ui:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
+      <<: *driver-common-ref
       device: :${NFS_DEVICE}/database/redisui        
