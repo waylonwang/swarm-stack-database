@@ -33,7 +33,7 @@ services:
   # ------------------------------------------------------------
   mariadb:
     <<: *service-common-ref
-    image: mariadb:latest
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/library/mariadb:11.4.2
     environment:
       <<: *env-common-ref
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
@@ -66,7 +66,7 @@ services:
   # ------------------------------------------------------------
   phpmyadmin:
     <<: *service-common-ref
-    image: phpmyadmin:latest
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/library/phpmyadmin:5.2.1
     environment:
       <<: *env-common-ref
       PMA_ARBITRARY: ${PMA_ARBITRARY}
@@ -104,7 +104,7 @@ services:
   # ------------------------------------------------------------
   postgres:
     <<: *service-common-ref
-    image: postgres:14.7
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/library/postgres:14.7
     environment:
       <<: *env-common-ref
       POSTGRES_DB: ${POSTGRES_DB}
@@ -138,7 +138,7 @@ services:
   # ------------------------------------------------------------
   pgvector:
     <<: *service-common-ref
-    image: ankane/pgvector:v0.5.0
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/ankane/pgvector:v0.5.0
     environment:
       <<: *env-common-ref
       POSTGRES_DB: ${POSTGRES_DB}
@@ -172,7 +172,7 @@ services:
   # ------------------------------------------------------------
   pgadmin:
     <<: *service-common-ref
-    image: dpage/pgadmin4:latest
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/dpage/pgadmin4:8.8
     environment:
       <<: *env-common-ref
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
@@ -207,7 +207,7 @@ services:
   # ------------------------------------------------------------
   mongo:
     <<: *service-common-ref
-    image: mongo:5.0
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/library/mongo:5.0.27
     ports:
       - "27017:27017"
     environment:
@@ -243,7 +243,7 @@ services:
   # ------------------------------------------------------------
   mongoadmin:
     <<: *service-common-ref
-    image: mongo-express:0.49.0
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/library/mongo-express:0.49.0
     environment:
       <<: *env-common-ref
       ME_CONFIG_OPTIONS_EDITORTHEME: ${ME_CONFIG_OPTIONS_EDITORTHEME}
@@ -282,7 +282,7 @@ services:
   # ------------------------------------------------------------
   redis:
     <<: *service-common-ref
-    image: redis:latest
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/library/redis:7.2.5
     command: redis-server /etc/redis/redis.conf
     ports:
       - "6379:6379"
@@ -311,7 +311,7 @@ services:
   # ------------------------------------------------------------
   redisui:
     <<: *service-common-ref
-    image: patrikx3/p3x-redis-ui:latest
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/patrikx3/p3x-redis-ui:2024.4.329
     environment:
       <<: *env-common-ref
     volumes:
