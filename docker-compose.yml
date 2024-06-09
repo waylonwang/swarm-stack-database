@@ -56,9 +56,11 @@ services:
         - homepage.group=Database & Development
         - homepage.name=MySQL
         - homepage.icon=mysql.png
-        - homepage.description=Mariadb 10
+        - homepage.description=Mariadb 10数据库(11.4.2)
+        - homepage.href=https://mysqladmin.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
         - homepage.ping=mariadb
-        - homepage.weight=10
+        - homepage.siteMonitor=http://phpmyadmin:80
+        - homepage.weight=20
       <<: [*deploy-common-ref, *placement-default-ref]
 
   # ------------------------------------------------------------
@@ -90,13 +92,13 @@ services:
         - traefik.http.routers.phpmyadmin.service=phpmyadmin
         - traefik.http.routers.phpmyadmin.middlewares=auth,normal-chain@file
         - traefik.http.services.phpmyadmin.loadbalancer.server.port=80
-        - homepage.group=Database & Development
-        - homepage.name=MySQL Admin
-        - homepage.icon=mysql.png
-        - homepage.href=https://mysqladmin.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
-        - homepage.description=MySQL管理
-        - homepage.siteMonitor=http://phpmyadmin:80
-        - homepage.weight=11
+        # - homepage.group=Database & Development
+        # - homepage.name=MySQL Admin
+        # - homepage.icon=mysql.png
+        # - homepage.href=https://mysqladmin.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
+        # - homepage.description=MySQL管理
+        # - homepage.siteMonitor=http://phpmyadmin:80
+        # - homepage.weight=11
       <<: [*deploy-common-ref, *placement-default-ref]
 
   # ------------------------------------------------------------
@@ -128,9 +130,11 @@ services:
         - homepage.group=Database & Development
         - homepage.name=PostgreSQL
         - homepage.icon=postgres.png
-        - homepage.description=PostgreSQL 14
+        - homepage.description=PostgreSQL 14数据库(14.7)
+        - homepage.href=https://pgadmin.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
         - homepage.ping=postgres
-        - homepage.weight=12
+        - homepage.siteMonitor=http://pgadmin
+        - homepage.weight=22
       <<: [*deploy-common-ref, *placement-default-ref]
 
   # ------------------------------------------------------------
@@ -162,9 +166,9 @@ services:
         - homepage.group=Database & Development
         - homepage.name=PGVector
         - homepage.icon=postgres.png
-        - homepage.description=PostgreSQL Vector
-        - homepage.ping=postgres
-        - homepage.weight=13
+        - homepage.description=PostgreSQL Vector数据库(0.5)
+        - homepage.ping=pgvector
+        - homepage.weight=23
       <<: [*deploy-common-ref, *placement-default-ref]
 
   # ------------------------------------------------------------
@@ -193,13 +197,13 @@ services:
         - traefik.http.routers.pgadmin.service=pgadmin
         - traefik.http.routers.pgadmin.middlewares=auth,normal-chain@file
         - traefik.http.services.pgadmin.loadbalancer.server.port=80
-        - homepage.group=Database & Development
-        - homepage.name=PostgreSQL Admin
-        - homepage.icon=postgres.png
-        - homepage.href=https://pgadmin.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
-        - homepage.description=PostgreSQL管理
-        - homepage.siteMonitor=http://pgadmin
-        - homepage.weight=14
+        # - homepage.group=Database & Development
+        # - homepage.name=PostgreSQL Admin
+        # - homepage.icon=postgres.png
+        # - homepage.href=https://pgadmin.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
+        # - homepage.description=PostgreSQL管理
+        # - homepage.siteMonitor=http://pgadmin
+        # - homepage.weight=14
       <<: [*deploy-common-ref, *placement-default-ref]
 
   # ------------------------------------------------------------
@@ -233,9 +237,11 @@ services:
         - homepage.group=Database & Development
         - homepage.name=MongoDB
         - homepage.icon=mongodb.png
-        - homepage.description=MongoDB数据库
+        - homepage.description=MongoDB 5数据库(5.0.27)
+        - homepage.href=https://mongoadmin.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
         - homepage.ping=mongo
-        - homepage.weight=15
+        - homepage.siteMonitor=http://mongoadmin:8081
+        - homepage.weight=25
       <<: [*deploy-common-ref, *placement-default-ref]
 
   # ------------------------------------------------------------
@@ -268,13 +274,13 @@ services:
         - traefik.http.routers.mongoadmin.service=mongoadmin
         - traefik.http.routers.mongoadmin.middlewares=auth,normal-chain@file
         - traefik.http.services.mongoadmin.loadbalancer.server.port=8081
-        - homepage.group=Database & Development
-        - homepage.name=MongoDB Admin
-        - homepage.icon=mongodb.png
-        - homepage.href=https://mongoadmin.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
-        - homepage.description=MongoDB管理
-        - homepage.siteMonitor=http://mongoadmin:8081
-        - homepage.weight=16
+        # - homepage.group=Database & Development
+        # - homepage.name=MongoDB Admin
+        # - homepage.icon=mongodb.png
+        # - homepage.href=https://mongoadmin.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
+        # - homepage.description=MongoDB管理
+        # - homepage.siteMonitor=http://mongoadmin:8081
+        # - homepage.weight=16
       <<: [*deploy-common-ref, *placement-default-ref]
 
   # ------------------------------------------------------------
@@ -298,12 +304,19 @@ services:
         fluentd-async-connect: "true"
     deploy:
       labels:
+        - traefik.enable=true
+        - traefik.tcp.routers.redis.rule=HostSNI(`*`)
+        - traefik.tcp.routers.redis.entrypoints=redis
+        - traefik.tcp.routers.redis.service=redis
+        - traefik.tcp.services.redis.loadbalancer.server.port=6379      
         - homepage.group=Database & Development
         - homepage.name=Redis
         - homepage.icon=redis.png
-        - homepage.description=Redis
+        - homepage.description=Redis数据库(7.2.5)
+        - homepage.href=https://redisui.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
         - homepage.ping=redis
-        - homepage.weight=17
+        - homepage.siteMonitor=http://redisui:7843
+        - homepage.weight=27
       <<: [*deploy-common-ref, *placement-default-ref]
 
   # ------------------------------------------------------------
@@ -329,13 +342,13 @@ services:
         - traefik.http.routers.redisui.service=redisui
         - traefik.http.routers.redisui.middlewares=auth,normal-chain@file
         - traefik.http.services.redisui.loadbalancer.server.port=7843
-        - homepage.group=Database & Development
-        - homepage.name=Redis UI
-        - homepage.icon=redis.png
-        - homepage.href=https://redisui.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
-        - homepage.description=Redis管理
-        - homepage.siteMonitor=http://redisui:7843
-        - homepage.weight=18
+        # - homepage.group=Database & Development
+        # - homepage.name=Redis UI
+        # - homepage.icon=redis.png
+        # - homepage.href=https://redisui.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
+        # - homepage.description=Redis管理
+        # - homepage.siteMonitor=http://redisui:7843
+        # - homepage.weight=18
       <<: [*deploy-common-ref, *placement-default-ref]
 
 networks:
