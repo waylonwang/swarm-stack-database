@@ -176,7 +176,7 @@ services:
   # ------------------------------------------------------------
   pgadmin:
     <<: *service-common-ref
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/dpage/pgadmin4:8.8
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/dpage/pgadmin4:8.6
     environment:
       <<: *env-common-ref
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
