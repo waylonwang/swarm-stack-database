@@ -252,6 +252,57 @@ services:
         - homepage.weight=25
       <<: [*deploy-common-ref, *placement-default-ref]
 
+  mongo-fastgpt:
+    <<: *service-common-ref
+    # image-ref: library/mongo:5.0.27
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/library/mongo:5.0.27
+    command: mongod --keyFile /data/mongodb.key --replSet rs0
+    entrypoint:
+      - bash
+      - -c
+      - |
+        openssl rand -base64 128 > /data/mongodb.key
+        chmod 400 /data/mongodb.key
+        chown 999:999 /data/mongodb.key
+        echo 'const isInited = rs.status().ok === 1
+        if(!isInited){
+          rs.initiate({
+              _id: "rs0",
+              members: [
+                  { _id: 0, host: "mongo:27017" }
+              ]
+          })
+        }' > /data/initReplicaSet.js
+        # 启动MongoDB服务
+        exec docker-entrypoint.sh "$$@" &
+
+        # 等待MongoDB服务启动
+        until mongo -u ${MONGO_USER} -p ${MONGO_PASSWORD} --authenticationDatabase admin --eval "print('waited for connection')" > /dev/null 2>&1; do
+          echo "Waiting for MongoDB to start..."
+          sleep 2
+        done
+
+        # 执行初始化副本集的脚本
+        mongo -u ${MONGO_USER} -p ${MONGO_PASSWORD} --authenticationDatabase admin /data/initReplicaSet.js
+
+        # 等待docker-entrypoint.sh脚本执行的MongoDB服务进程
+        wait $$!    
+    ports:
+      - "27018:27017"
+    environment:
+      <<: *env-common-ref
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - nfs_mongo-fastgpt_data_db:/data/db
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.database.mong-fastgpto
+        fluentd-async-connect: "true"
+    deploy:
+      <<: [*deploy-common-ref, *placement-default-ref]
+
   # ------------------------------------------------------------
   # Mongo-Express
   # ------------------------------------------------------------
@@ -423,6 +474,11 @@ volumes:
     driver_opts:
       <<: *driver-common-ref
       device: :${NFS_DEVICE}/database/mongo/config
+  nfs_mongo-fastgpt_data_db:
+    driver: local
+    driver_opts:
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/database/mongo-fastgpt/data/db
   nfs_redis_data:
     driver: local
     driver_opts:
