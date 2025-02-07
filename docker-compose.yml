@@ -115,7 +115,7 @@ services:
     command: >
       /bin/bash -c "
         # 启动 PostgreSQL 容器
-        /usr/local/bin/docker-entrypoint.sh postgres &
+        docker-entrypoint.sh postgres &
 
         # 等待 PostgreSQL 启动
         until pg_isready -h localhost -p 5432; do
@@ -124,7 +124,7 @@ services:
         done
 
         # 安装 pgAgent
-        # apt-get update && apt-get install -y pgagent &&
+        apt-get update && apt-get install -y pgagent &&
 
         # 启动 pgAgent 守护进程
         pgagent -f -l 2 hostaddr=localhost dbname=$${POSTGRES_DB} port=5432 user=$${POSTGRES_USER} password=$${POSTGRES_PASSWORD}
