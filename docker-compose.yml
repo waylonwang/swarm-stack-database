@@ -115,8 +115,8 @@ services:
     command: >
       /bin/bash -c "
         # 修改 APT 源为中科大源
-        sed -i 's|http://deb.debian.org/debian|https://mirrors.ustc.edu.cn/debian|g' /etc/apt/sources.list &&
-        sed -i 's|http://security.debian.org/debian-security|https://mirrors.ustc.edu.cn/debian-security|g' /etc/apt/sources.list &&
+        sed -i 's|http://deb.debian.org/debian|http://mirrors.ustc.edu.cn/debian|g' /etc/apt/sources.list &&
+        sed -i 's|http://security.debian.org/debian-security|http://mirrors.ustc.edu.cn/debian-security|g' /etc/apt/sources.list &&
 
         # 安装 pgagent
         apt-get update && apt-get install -y pgagent &&
