@@ -159,7 +159,7 @@ services:
     entrypoint: >
       /bin/sh -c "
       until pg_isready -h postgres -p 5432; do sleep 2; done;
-      pgagent -f -l 2 postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}"                
+      pgagent -f hostaddr=postgres dbname=${POSTGRES_DB} user=${POSTGRES_USER} port=5432 password=${POSTGRES_PASSWORD}"                
     environment:
       <<: *env-common-ref                
     logging:
