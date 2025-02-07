@@ -144,6 +144,29 @@ services:
       <<: [*deploy-common-ref, *placement-default-ref]
 
   # ------------------------------------------------------------
+  # pgagent
+  # ------------------------------------------------------------
+  pgagent:
+    <<: *service-common-ref
+    # image-ref: chiavegatto/postgres-pgagent:14.1
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/chiavegatto/postgres-pgagent:14.1
+    depends_on:
+      - postgres    
+    entrypoint: /bin/sh -c
+                "/tmp/wait-for-it.sh postgres:5432 --timeout=30 &&
+                PGPASSWORD='${POSTGRES_PASSWORD}' psql -U ${POSTGRES_USER} -h postgres -p 5432 -d ${POSTGRES_DB} -c 'CREATE EXTENSION IF NOT EXISTS pgagent;' &&
+                PGPASSWORD='${POSTGRES_PASSWORD}' pgagent -f hostaddr=postgres dbname=${POSTGRES_DB} user=${POSTGRES_USER} port=5432"
+    environment:
+      <<: *env-common-ref                
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.database.pgagent
+        fluentd-async-connect: "true"                
+    deploy:
+      <<: [*deploy-common-ref, *placement-default-ref]
+
+  # ------------------------------------------------------------
   # Postgres Vector
   # ------------------------------------------------------------
   pgvector:
