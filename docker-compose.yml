@@ -119,7 +119,8 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       PGDATA: ${PGDATA}
     volumes:
-      - nfs_postgres:${PGDATA}
+      - nfs_postgres_data:${PGDATA}
+      - nfs_postgres_extension:/usr/share/postgresql/14/extension
     logging:
       driver: fluentd
       options:
@@ -439,11 +440,16 @@ volumes:
     driver_opts:
       <<: *driver-common-ref
       device: :${NFS_DEVICE}/database/phpmyadmin/theme
-  nfs_postgres:
+  nfs_postgres_data:
     driver: local
     driver_opts:
       <<: *driver-common-ref
       device: :${NFS_DEVICE}/database/postgres/data
+  nfs_postgres_extension:
+    driver: local
+    driver_opts:
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/database/postgres/extension
   nfs_pgvector:
     driver: local
     driver_opts:
