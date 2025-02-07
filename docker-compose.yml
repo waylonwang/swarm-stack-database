@@ -112,25 +112,25 @@ services:
     <<: *service-common-ref
     # image-ref: library/postgres:14.7
     image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/library/postgres:14.7
-    command: >
-      /bin/bash -c "
-        # 启动 PostgreSQL 容器
-        /docker-entrypoint.sh postgres &
+    # command: >
+    #   /bin/bash -c "
+    #     # 启动 PostgreSQL 容器
+    #     /docker-entrypoint.sh postgres &
 
-        # 等待 PostgreSQL 启动
-        until pg_isready -h localhost -p 5432; do
-          echo 'Waiting for PostgreSQL to start...'
-          sleep 2
-        done
+    #     # 等待 PostgreSQL 启动
+    #     until pg_isready -h localhost -p 5432; do
+    #       echo 'Waiting for PostgreSQL to start...'
+    #       sleep 2
+    #     done
 
-        # 安装 pgAgent
-        # apt-get update && apt-get install -y pgagent &&
+    #     # 安装 pgAgent
+    #     # apt-get update && apt-get install -y pgagent &&
 
-        # 启动 pgAgent 守护进程
-        pgagent -f -l 2 hostaddr=localhost dbname=$${POSTGRES_DB} port=5432 user=$${POSTGRES_USER} password=$${POSTGRES_PASSWORD}
+    #     # 启动 pgAgent 守护进程
+    #     pgagent -f -l 2 hostaddr=localhost dbname=$${POSTGRES_DB} port=5432 user=$${POSTGRES_USER} password=$${POSTGRES_PASSWORD}
 
-        # 使用 exec 保证容器一直运行
-        wait $$!"
+    #     # 使用 exec 保证容器一直运行
+    #     wait $$!"
     environment:
       <<: *env-common-ref
       POSTGRES_DB: ${POSTGRES_DB}
