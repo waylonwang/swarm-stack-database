@@ -112,6 +112,24 @@ services:
     <<: *service-common-ref
     # image-ref: library/postgres:14.7
     image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/library/postgres:14.7
+    command: >
+      /bin/bash -c "
+        # 启动 PostgreSQL 容器
+        /docker-entrypoint.sh postgres &
+
+        # 等待 PostgreSQL 启动
+        until pg_isready -h localhost -p 5432; do
+          echo 'Waiting for PostgreSQL to start...'
+          sleep 2
+        done
+
+        # 安装 pgAgent
+        # apt-get update && apt-get install -y pgagent &&
+
+        # 启动 pgAgent 守护进程
+        pgagent -f -l 2 hostaddr=localhost dbname=${POSTGRES_DB} port=5432 user=${POSTGRES_USER} password=${POSTGRES_PASSWORD}
+        # 使用 exec 保证容器一直运行
+        wait $!"
     environment:
       <<: *env-common-ref
       POSTGRES_DB: ${POSTGRES_DB}
@@ -146,38 +164,38 @@ services:
   # ------------------------------------------------------------
   # pgagent
   # ------------------------------------------------------------
-  pgagent:
-    <<: *service-common-ref
-    # image-ref: chiavegatto/postgres-pgagent:14.1
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/chiavegatto/postgres-pgagent:14.1
-    depends_on:
-      - postgres    
-    # entrypoint: /bin/sh -c
-    #             "/tmp/wait-for-it.sh postgres:5432 --timeout=30 &&
-    #             PGPASSWORD='${POSTGRES_PASSWORD}' psql -U ${POSTGRES_USER} -h postgres -p 5432 -d ${POSTGRES_DB} -c 'CREATE EXTENSION IF NOT EXISTS pgagent;' &&
-    #             pgagent hostaddr=postgres dbname=${POSTGRES_DB} user=${POSTGRES_USER} port=5432 password=${POSTGRES_PASSWORD}"
-    entrypoint: >
-      /bin/sh -c "
-      until pg_isready -h postgres -p 5432; do sleep 2; done;
-      pgagent -f hostaddr=postgres dbname=${POSTGRES_DB} user=${POSTGRES_USER} port=5432 password=${POSTGRES_PASSWORD};
-      tail -f /dev/null"                
-    environment:
-      <<: *env-common-ref                
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.database.pgagent
-        fluentd-async-connect: "true"                
-    deploy:
-      # <<: [*deploy-common-ref, *placement-default-ref]
-      mode: replicated
-      replicas: 1
-      restart_policy:
-        condition: none  
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.database == true          
+  # pgagent:
+  #   <<: *service-common-ref
+  #   # image-ref: chiavegatto/postgres-pgagent:14.1
+  #   image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/chiavegatto/postgres-pgagent:14.1
+  #   depends_on:
+  #     - postgres    
+  #   # entrypoint: /bin/sh -c
+  #   #             "/tmp/wait-for-it.sh postgres:5432 --timeout=30 &&
+  #   #             PGPASSWORD='${POSTGRES_PASSWORD}' psql -U ${POSTGRES_USER} -h postgres -p 5432 -d ${POSTGRES_DB} -c 'CREATE EXTENSION IF NOT EXISTS pgagent;' &&
+  #   #             pgagent hostaddr=postgres dbname=${POSTGRES_DB} user=${POSTGRES_USER} port=5432 password=${POSTGRES_PASSWORD}"
+  #   entrypoint: >
+  #     /bin/sh -c "
+  #     until pg_isready -h postgres -p 5432; do sleep 2; done;
+  #     pgagent -f hostaddr=postgres dbname=${POSTGRES_DB} user=${POSTGRES_USER} port=5432 password=${POSTGRES_PASSWORD};
+  #     tail -f /dev/null"                
+  #   environment:
+  #     <<: *env-common-ref                
+  #   logging:
+  #     driver: fluentd
+  #     options:
+  #       tag: docker.database.pgagent
+  #       fluentd-async-connect: "true"                
+  #   deploy:
+  #     # <<: [*deploy-common-ref, *placement-default-ref]
+  #     mode: replicated
+  #     replicas: 1
+  #     restart_policy:
+  #       condition: none  
+  #     placement:
+  #       constraints:
+  #         - node.labels.type == vm
+  #         - node.labels.database == true          
 
   # ------------------------------------------------------------
   # Postgres Vector
