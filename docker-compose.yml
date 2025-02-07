@@ -123,11 +123,13 @@ services:
           sleep 2
         done
 
-        # 安装 pgAgent
+        # 修改 APT 源为清华源,安装 pgAgent
+        sed -i 's|http://deb.debian.org/debian|https://mirrors.tuna.tsinghua.edu.cn/debian|g' /etc/apt/sources.list &&
+        sed -i 's|http://security.debian.org/debian-security|https://mirrors.tuna.tsinghua.edu.cn/debian-security|g' /etc/apt/sources.list &&
         apt-get update && apt-get install -y pgagent &&
 
         # 启动 pgAgent 守护进程
-        pgagent -f -l 2 hostaddr=localhost dbname=$${POSTGRES_DB} port=5432 user=$${POSTGRES_USER} password=$${POSTGRES_PASSWORD}
+        pgagent -f -l 2 hostaddr=127.0.0.1 dbname=$${POSTGRES_DB} port=5432 user=$${POSTGRES_USER} password=$${POSTGRES_PASSWORD}
 
         # 使用 exec 保证容器一直运行
         wait $$!"
