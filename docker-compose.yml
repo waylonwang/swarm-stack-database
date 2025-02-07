@@ -159,7 +159,8 @@ services:
     entrypoint: >
       /bin/sh -c "
       until pg_isready -h postgres -p 5432; do sleep 2; done;
-      pgagent -f hostaddr=postgres dbname=${POSTGRES_DB} user=${POSTGRES_USER} port=5432 password=${POSTGRES_PASSWORD}"                
+      pgagent -f hostaddr=postgres dbname=${POSTGRES_DB} user=${POSTGRES_USER} port=5432 password=${POSTGRES_PASSWORD};
+      tail -f /dev/null"                
     environment:
       <<: *env-common-ref                
     logging:
@@ -168,7 +169,15 @@ services:
         tag: docker.database.pgagent
         fluentd-async-connect: "true"                
     deploy:
-      <<: [*deploy-common-ref, *placement-default-ref]
+      # <<: [*deploy-common-ref, *placement-default-ref]
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: none  
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.database == true          
 
   # ------------------------------------------------------------
   # Postgres Vector
