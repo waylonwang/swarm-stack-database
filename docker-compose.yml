@@ -114,12 +114,13 @@ services:
     image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/library/postgres:14.7
     command: >
       /bin/bash -c "
-        # 修改 apt 源为清华源
-        sed -i 's|http://deb.debian.org/debian|https://mirrors.tuna.tsinghua.edu.cn/debian|g' /etc/apt/sources.list &&
-        sed -i 's|http://security.debian.org/debian-security|https://mirrors.tuna.tsinghua.edu.cn/debian-security|g' /etc/apt/sources.list &&
-        sed -i 's|http://archive.ubuntu.com/ubuntu/|https://mirrors.tuna.tsinghua.edu.cn/ubuntu/|g' /etc/apt/sources.list &&
-        sed -i 's|http://security.ubuntu.com/ubuntu/|https://mirrors.tuna.tsinghua.edu.cn/ubuntu/|g' /etc/apt/sources.list &&      
-        
+        # 修改 APT 源为中科大源
+        sed -i 's|http://deb.debian.org/debian|https://mirrors.ustc.edu.cn/debian|g' /etc/apt/sources.list &&
+        sed -i 's|http://security.debian.org/debian-security|https://mirrors.ustc.edu.cn/debian-security|g' /etc/apt/sources.list &&
+
+        # 安装 pgagent
+        apt-get update && apt-get install -y pgagent &&
+
         # 启动 PostgreSQL 容器
         docker-entrypoint.sh postgres &
 
@@ -130,7 +131,7 @@ services:
         done
 
         # 安装 pgAgent
-        apt-get update && apt-get install -y pgagent &&
+        # apt-get update && apt-get install -y pgagent &&
 
         # 启动 pgAgent 守护进程
         pgagent -f -l 2 hostaddr=127.0.0.1 dbname=$${POSTGRES_DB} port=5432 user=$${POSTGRES_USER} password=$${POSTGRES_PASSWORD}
