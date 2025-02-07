@@ -127,9 +127,10 @@ services:
         # apt-get update && apt-get install -y pgagent &&
 
         # 启动 pgAgent 守护进程
-        pgagent -f -l 2 hostaddr=localhost dbname=$$POSTGRES_DB port=5432 user=$$POSTGRES_USER password=$$POSTGRES_PASSWORD
+        pgagent -f -l 2 hostaddr=localhost dbname=$${POSTGRES_DB} port=5432 user=$${POSTGRES_USER} password=$${POSTGRES_PASSWORD}
+
         # 使用 exec 保证容器一直运行
-        wait $!"
+        wait $$!"
     environment:
       <<: *env-common-ref
       POSTGRES_DB: ${POSTGRES_DB}
