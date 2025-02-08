@@ -424,6 +424,39 @@ services:
         # - homepage.weight=18
       <<: [*deploy-common-ref, *placement-default-ref]
 
+  # ------------------------------------------------------------
+  # CloudBeaver
+  # ------------------------------------------------------------
+  cloudbeaver:
+    <<: *service-common-ref
+    # image-ref: dbeaver/cloudbeaver:24.3.4
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/dbeaver/cloudbeaver:24.3.4
+    environment:
+      <<: *env-common-ref
+    volumes:
+      - nfs_cloudbeaver:/opt/cloudbeaver/workspace
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.database.cloudbeaver
+        fluentd-async-connect: "true"
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.cloudbeaver.rule=Host(`cloudbeaver.${DOMAIN_SWARM}`,`cloudbeaver.${DOMAIN_EMERGENCY}`)
+        - traefik.http.routers.cloudbeaver.entrypoints=websecure
+        - traefik.http.routers.cloudbeaver.service=cloudbeaver
+        - traefik.http.routers.cloudbeaver.middlewares=auth,normal-chain@file
+        - traefik.http.services.cloudbeaver.loadbalancer.server.port=8978
+        - homepage.group=Database & Development
+        - homepage.name=CloudBeaver
+        - homepage.icon=mysql.png
+        - homepage.href=https://cloudbeaver.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
+        - homepage.description=数据库管理器
+        - homepage.siteMonitor=http://cloudbeaver:8978
+        - homepage.weight=28
+      <<: [*deploy-common-ref, *placement-default-ref]
+
 networks:
   network_cluster:
     external: true
@@ -515,4 +548,9 @@ volumes:
     driver_opts:
       <<: *driver-common-ref
       device: :${NFS_DEVICE}/database/redisui
+  nfs_cloudbeaver:
+    driver: local
+    driver_opts:
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/database/cloudbeaver
 ...
