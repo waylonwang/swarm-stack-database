@@ -377,6 +377,7 @@ services:
     environment:
       <<: *env-common-ref
       MONGO_URL: ${MC_MONGO_URL}
+      MONGOCLIENT_DEFAULT_CONNECTION_URL: ${MONGOCLIENT_DEFAULT_CONNECTION_URL}
     volumes:
       - nfs_mongoclient_data:/data/db
     logging:
