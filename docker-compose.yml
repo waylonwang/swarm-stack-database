@@ -336,6 +336,7 @@ services:
     image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/mongoclient/mongoclient:4.0.1
     environment:
       <<: *env-common-ref
+      MONGO_URL: ${MC_MONGO_URL}
       MONGOCLIENT_DEFAULT_CONNECTION_URL: ${MONGOCLIENT_DEFAULT_CONNECTION_URL}
     volumes:
       - nfs_mongoclient_data:/data/db
