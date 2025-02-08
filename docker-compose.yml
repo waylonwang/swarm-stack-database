@@ -434,6 +434,8 @@ services:
     image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/dbeaver/cloudbeaver:24.3.4
     environment:
       <<: *env-common-ref
+      LANG: zh_CN.UTF-8
+      CB_DEFAULT_LANGUAGE: zh
     volumes:
       - nfs_cloudbeaver_config:/opt/cloudbeaver
     logging:
