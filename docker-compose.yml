@@ -438,7 +438,7 @@ services:
       CB_DEFAULT_LANGUAGE: zh
     volumes:
       - nfs_cloudbeaver_config:/opt/cloudbeaver
-      - nfs_cloudbeaver_db_portainer:/localdb/portainer
+      - nfs_cloudbeaver_sqlitedb:/sqlitedb
     logging:
       driver: fluentd
       options:
@@ -557,9 +557,9 @@ volumes:
     driver_opts:
       <<: *driver-common-ref
       device: :${NFS_DEVICE}/database/cloudbeaver
-  nfs_cloudbeaver_db_portainer:
+  nfs_cloudbeaver_sqlitedb:
     driver: local
     driver_opts:
       <<: *driver-common-ref
-      device: :${NFS_DEVICE}/base/portainer      
+      device: :${NFS_DEVICE}/database/sqlitedb    
 ...
