@@ -435,7 +435,7 @@ services:
     environment:
       <<: *env-common-ref
     volumes:
-      - nfs_cloudbeaver:/opt/cloudbeaver
+      - nfs_cloudbeaver_config:/opt/cloudbeaver
     logging:
       driver: fluentd
       options:
@@ -549,7 +549,7 @@ volumes:
     driver_opts:
       <<: *driver-common-ref
       device: :${NFS_DEVICE}/database/redisui
-  nfs_cloudbeaver:
+  nfs_cloudbeaver_config:
     driver: local
     driver_opts:
       <<: *driver-common-ref
