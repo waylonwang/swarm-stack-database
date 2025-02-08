@@ -434,7 +434,7 @@ services:
     environment:
       <<: *env-common-ref
     volumes:
-      - nfs_cloudbeaver:/opt/cloudbeaver/workspace
+      - nfs_cloudbeaver:/opt/cloudbeaver
     logging:
       driver: fluentd
       options:
