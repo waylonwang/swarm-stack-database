@@ -454,7 +454,7 @@ services:
         - traefik.http.services.cloudbeaver.loadbalancer.server.port=8978
         - homepage.group=Database & Development
         - homepage.name=CloudBeaver
-        - homepage.icon=mysql.png
+        - homepage.icon=cloudbeaver.png
         - homepage.href=https://cloudbeaver.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
         - homepage.description=数据库管理器
         - homepage.siteMonitor=http://cloudbeaver:8978
