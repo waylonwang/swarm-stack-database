@@ -425,6 +425,39 @@ services:
         # - homepage.weight=18
       <<: [*deploy-common-ref, *placement-default-ref]
 
+# ------------------------------------------------------------
+  # BlotDB Web Editor
+  # ------------------------------------------------------------
+  blotdbeditor:
+    <<: *service-common-ref
+    # image-ref: boltdbwebeditor/boltdbwebeditor:latest
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/boltdbwebeditor/boltdbwebeditor:latest
+    environment:
+      <<: *env-common-ref
+    volumes:
+        - nfs_portainer:/data
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.database.bolteditor
+        fluentd-async-connect: "true"
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.bolteditor.rule=Host(`bolteditor.${DOMAIN_SWARM}`,`redisui.${DOMAIN_EMERGENCY}`)
+        - traefik.http.routers.bolteditor.entrypoints=websecure
+        - traefik.http.routers.bolteditor.service=bolteditor
+        - traefik.http.routers.bolteditor.middlewares=auth,normal-chain@file
+        - traefik.http.services.bolteditor.loadbalancer.server.port=8080
+        - homepage.group=Database & Development
+        - homepage.name=BlotDB Web Editor
+        - homepage.icon=redis.png
+        - homepage.href=https://bolteditor.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
+        - homepage.description=BlotDB管理
+        - homepage.siteMonitor=http://bolteditor:8080
+        - homepage.weight=18
+      <<: [*deploy-common-ref, *placement-default-ref]      
+
   # ------------------------------------------------------------
   # CloudBeaver
   # ------------------------------------------------------------
@@ -561,5 +594,10 @@ volumes:
     driver: local
     driver_opts:
       <<: *driver-common-ref
-      device: :${NFS_DEVICE}/database/sqlitedb    
+      device: :${NFS_DEVICE}/database/sqlitedb
+  nfs_portainer:
+    driver: local
+    driver_opts:
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/base/portainer      
 ...
