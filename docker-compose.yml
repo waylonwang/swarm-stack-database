@@ -444,7 +444,7 @@ services:
     deploy:
       labels:
         - traefik.enable=true
-        - traefik.http.routers.bolteditor.rule=Host(`bolteditor.${DOMAIN_SWARM}`,`redisui.${DOMAIN_EMERGENCY}`)
+        - traefik.http.routers.bolteditor.rule=Host(`bolteditor.${DOMAIN_SWARM}`,`bolteditor.${DOMAIN_EMERGENCY}`)
         - traefik.http.routers.bolteditor.entrypoints=websecure
         - traefik.http.routers.bolteditor.service=bolteditor
         - traefik.http.routers.bolteditor.middlewares=auth,normal-chain@file
