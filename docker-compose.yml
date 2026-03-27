@@ -112,29 +112,29 @@ services:
     <<: *service-common-ref
     # image-ref: library/postgres:14.7
     image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/library/postgres:14.7
-    command: >
-      /bin/bash -c "
-        # 修改 APT 源为中科大源
-        sed -i 's|http://deb.debian.org/debian|http://mirrors.ustc.edu.cn/debian|g' /etc/apt/sources.list &&
-        sed -i 's|http://security.debian.org/debian-security|http://mirrors.ustc.edu.cn/debian-security|g' /etc/apt/sources.list &&
+    # command: >
+    #   /bin/bash -c "
+    #     # 修改 APT 源为中科大源
+    #     sed -i 's|http://deb.debian.org/debian|http://mirrors.ustc.edu.cn/debian|g' /etc/apt/sources.list &&
+    #     sed -i 's|http://security.debian.org/debian-security|http://mirrors.ustc.edu.cn/debian-security|g' /etc/apt/sources.list &&
 
-        # 安装 pgagent
-        apt-get update && apt-get install -y pgagent &&
+    #     # 安装 pgagent
+    #     apt-get update && apt-get install -y pgagent &&
 
-        # 启动 PostgreSQL 容器
-        docker-entrypoint.sh postgres &
+    #     # 启动 PostgreSQL 容器
+    #     docker-entrypoint.sh postgres &
 
-        # 等待 PostgreSQL 启动
-        until pg_isready -h localhost -p 5432; do
-          echo 'Waiting for PostgreSQL to start...'
-          sleep 2
-        done
+    #     # 等待 PostgreSQL 启动
+    #     until pg_isready -h localhost -p 5432; do
+    #       echo 'Waiting for PostgreSQL to start...'
+    #       sleep 2
+    #     done
 
-        # 启动 pgAgent 守护进程
-        pgagent -f hostaddr=127.0.0.1 dbname=$${POSTGRES_DB} port=5432 user=$${POSTGRES_USER} password=$${POSTGRES_PASSWORD}
+    #     # 启动 pgAgent 守护进程
+    #     pgagent -f hostaddr=127.0.0.1 dbname=$${POSTGRES_DB} port=5432 user=$${POSTGRES_USER} password=$${POSTGRES_PASSWORD}
 
-        # 使用 exec 保证容器一直运行
-        wait $$!"
+    #     # 使用 exec 保证容器一直运行
+    #     wait $$!"
     environment:
       <<: *env-common-ref
       POSTGRES_DB: ${POSTGRES_DB}
