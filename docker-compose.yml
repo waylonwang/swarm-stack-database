@@ -638,5 +638,15 @@ volumes:
     driver: local
     driver_opts:
       <<: *driver-common-ref
-      device: :${NFS_DEVICE}/base/portainer      
+      device: :${NFS_DEVICE}/base/portainer  
+  nfs_couchdb_data: 
+    driver: local
+    driver_opts:
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/database/couchdb/data
+  nfs_couchdb_etc: 
+    driver: local
+    driver_opts:
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/database/couchdb/etc      
 ...
