@@ -494,6 +494,45 @@ services:
         - homepage.weight=28
       <<: [*deploy-common-ref, *placement-default-ref]
 
+  couchdb:
+      <<: *service-common-ref
+    # image-ref: library/couchdb:3.5.1
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/library/couchdb:3.5.1
+    user: 5984:5984
+    environment:
+      - COUCHDB_USER=${COUCHDB_USER}
+      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
+    volumes:
+      - ./couchdb-data:
+      - nfs_couchdb_data:/opt/couchdb/data
+      - nfs_couchdb_etc:/opt/couchdb/etc
+    ports:
+      - target: 5984
+        published: 5984
+        protocol: tcp
+        mode: host
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.storage.couchdb
+    #     fluentd-async-connect: "true"
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.couchdb.rule=Host(`immich.${DOMAIN_SWARM}`,`immich.${DOMAIN_EMERGENCY}`)
+        - traefik.http.routers.couchdb.entrypoints=websecure
+        - traefik.http.routers.couchdb.service=couchdb
+        - traefik.http.routers.couchdb.middlewares=auth,normal-chain@file
+        - traefik.http.services.couchdb.loadbalancer.server.port=5984
+        - homepage.group=Storage
+        - homepage.name=CouchDB
+        - homepage.icon=couchdb.png
+        - homepage.href=https://couchdb.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
+        - homepage.description=CouchDB数据库(3.5.1)
+        - homepage.siteMonitor=http://couchdb:5984
+        - homepage.weight=30
+      <<: [*deploy-common-ref, *placement-default-ref]   
+
 networks:
   network_cluster:
     external: true
