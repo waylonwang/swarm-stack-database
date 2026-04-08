@@ -498,12 +498,10 @@ services:
       <<: *service-common-ref
     # image-ref: library/couchdb:3.5.1
     image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/couchdb:3.5.1
-    user: 5984:5984
     environment:
       - COUCHDB_USER=${COUCHDB_USER}
       - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
     volumes:
-      - ./couchdb-data:
       - nfs_couchdb_data:/opt/couchdb/data
       - nfs_couchdb_etc:/opt/couchdb/etc
     ports:
