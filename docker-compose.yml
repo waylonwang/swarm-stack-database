@@ -497,7 +497,7 @@ services:
   couchdb:
       <<: *service-common-ref
     # image-ref: library/couchdb:3.5.1
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/library/couchdb:3.5.1
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/couchdb:3.5.1
     user: 5984:5984
     environment:
       - COUCHDB_USER=${COUCHDB_USER}
