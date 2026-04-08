@@ -44,11 +44,11 @@ services:
       - nfs_mariadb_data:/var/lib/mysql
       - nfs_mariadb_conf:/etc/mysql/conf.d
       - nfs_mariadb_log:/var/log/mysql
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.database.mariadb
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.database.mariadb
+    #     fluentd-async-connect: "true"
     deploy:
       labels:
         - traefik.enable=true
@@ -83,11 +83,11 @@ services:
       PMA_PASSWORD: ${PMA_PASSWORD}
     volumes:
       - nfs_phpmyadmin:/var/www/html/themes/mytheme
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.database.phpmyadmin
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.database.phpmyadmin
+    #     fluentd-async-connect: "true"
     deploy:
       labels:
         - traefik.enable=true
@@ -144,11 +144,11 @@ services:
     volumes:
       - nfs_postgres_data:${PGDATA}
       - nfs_postgres_extension:/usr/share/postgresql/14/extension
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.database.postgres
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.database.postgres
+    #     fluentd-async-connect: "true"
     deploy:
       labels:
         - traefik.enable=true
@@ -181,11 +181,11 @@ services:
       PGDATA: ${PGDATA}
     volumes:
       - nfs_pgvector:${PGDATA}
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.database.pgvector
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.database.pgvector
+    #     fluentd-async-connect: "true"
     deploy:
       labels:
         # - traefik.enable=true
@@ -215,11 +215,11 @@ services:
     volumes:
       - nfs_pgadmin_data:/var/lib/pgadmin
       - nfs_pgadmin_src:/pgadmin4
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.database.pgadmin
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.database.pgadmin
+    #     fluentd-async-connect: "true"
     deploy:
       labels:
         - traefik.enable=true
@@ -254,11 +254,11 @@ services:
       - nfs_mongo_data_db:/data/db
       - nfs_mongo_data_configdb:/data/configdb
       - nfs_mongo_config:/etc/mongo
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.database.mongo
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.database.mongo
+    #     fluentd-async-connect: "true"
     deploy:
       labels:
         - traefik.enable=true
@@ -319,11 +319,11 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
     volumes:
       - nfs_mongo-fastgpt_data_db:/data/db
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.database.mong-fastgpto
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.database.mong-fastgpto
+    #     fluentd-async-connect: "true"
     deploy:
       <<: [*deploy-common-ref, *placement-default-ref]
 
@@ -340,11 +340,11 @@ services:
       MONGOCLIENT_DEFAULT_CONNECTION_URL: ${MONGOCLIENT_DEFAULT_CONNECTION_URL}
     volumes:
       - nfs_mongoclient_data:/data/db
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.database.mongoclient
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.database.mongoclient
+    #     fluentd-async-connect: "true"
     deploy:
       labels:
         - traefik.enable=true
@@ -370,11 +370,11 @@ services:
     volumes:
       - nfs_redis_data:/data
       - nfs_redis_config:/etc/redis
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.database.redis
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.database.redis
+    #     fluentd-async-connect: "true"
     deploy:
       labels:
         - traefik.enable=true
@@ -403,11 +403,11 @@ services:
       <<: *env-common-ref
     volumes:
         - nfs_redis_ui:/settings
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.database.redisui
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.database.redisui
+    #     fluentd-async-connect: "true"
     deploy:
       labels:
         - traefik.enable=true
@@ -436,11 +436,11 @@ services:
       <<: *env-common-ref
     volumes:
         - nfs_portainer:/data
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.database.bolteditor
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.database.bolteditor
+    #     fluentd-async-connect: "true"
     deploy:
       labels:
         - traefik.enable=true
@@ -472,11 +472,11 @@ services:
     volumes:
       - nfs_cloudbeaver_config:/opt/cloudbeaver
       - nfs_cloudbeaver_sqlitedb:/sqlitedb
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.database.cloudbeaver
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.database.cloudbeaver
+    #     fluentd-async-connect: "true"
     deploy:
       labels:
         - traefik.enable=true
