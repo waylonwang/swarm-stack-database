@@ -522,7 +522,7 @@ services:
         - traefik.http.routers.couchdb-https.tls=true
         - traefik.http.routers.couchdb-https.tls.certresolver=letsencrypt
         - traefik.http.routers.couchdb-https.service=couchdb-service
-        - traefik.http.routers.couchdb-https.middlewares=auth,normal-chain@file 
+        # - traefik.http.routers.couchdb-https.middlewares=auth,normal-chain@file 
 
         # - traefik.http.middlewares.couchdb-root.redirectregex.regex=^/$$
         # - traefik.http.middlewares.couchdb-root.redirectregex.replacement=/_utils
