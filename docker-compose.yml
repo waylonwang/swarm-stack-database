@@ -523,16 +523,15 @@ services:
         - traefik.http.routers.couchdb-https.tls.certresolver=letsencrypt
         - traefik.http.routers.couchdb-https.service=couchdb-service
         - traefik.http.routers.couchdb-https.middlewares=auth,normal-chain@file   
-        - traefik.http.middlewares.couchdb-root.redirectregex.regex=^https?://[^/]+/?$
-        - traefik.http.middlewares.couchdb-root.redirectregex.replacement=https://couchdb.${DOMAIN_SWARM}/_utils
+        
+        - traefik.http.middlewares.couchdb-root.redirectregex.regex=^/$$
+        - traefik.http.middlewares.couchdb-root.redirectregex.replacement=/_utils
         - traefik.http.middlewares.couchdb-root.redirectregex.permanent=true
-        - traefik.http.middlewares.couchdb-utils.stripprefixregex.regex=^/(?!_utils)
-        - traefik.http.middlewares.couchdb-utils.stripprefixregex.replacement=/_utils
-        - traefik.http.routers.couchdb.middlewares=auth,normal-chain@file,couchdb-utils
         # - traefik.tcp.routers.couchdb.rule=HostSNI(`*`)
         # - traefik.tcp.routers.couchdb.entrypoints=couchdb
         # - traefik.tcp.routers.couchdb.service=couchdb
-        - traefik.tcp.services.couchdb.loadbalancer.server.port=5984        
+        # - traefik.tcp.services.couchdb.loadbalancer.server.port=5984  
+        - traefik.http.services.couchdb-service.loadbalancer.server.port=5984      
         - homepage.group=Storage
         - homepage.name=CouchDB
         - homepage.icon=couchdb.png
