@@ -495,7 +495,7 @@ services:
       <<: [*deploy-common-ref, *placement-default-ref]
 
   couchdb:
-      <<: *service-common-ref
+    <<: *service-common-ref
     # image-ref: library/couchdb:3.5.1
     image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/couchdb:3.5.1
     environment:
